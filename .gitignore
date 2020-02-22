@@ -18,4 +18,4 @@ tests/.pytest_cache/*
 
 # sensitive data
 data/*
-config/app_env.py
+secrets/*
