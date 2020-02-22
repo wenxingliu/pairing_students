@@ -23,7 +23,7 @@ def make_recommondation_for_volunteer(volunteer: Volunteer,
 
     for requestee in all_requestees:
 
-        if requestee.assigned:
+        if requestee.assigned or requestee.recommendation_filled:
             continue
         if volunteer.gender != requestee.volunteer_gender:
             continue
@@ -37,6 +37,7 @@ def make_recommondation_for_volunteer(volunteer: Volunteer,
                 hours_diff = (time_slot_r.fake_start_datetime - time_slot_v.fake_start_datetime).total_seconds() / 3600
                 if abs(hours_diff) < settings.ALLOWED_HOURS_DIFF_IN_RECOMMENDATION:
                     recommendation_list.append(requestee)
+                    requestee.recommendation_filled = True
                     volunteer.recommend(requestee)
                     break
                 break

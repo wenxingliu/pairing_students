@@ -13,6 +13,7 @@ class Requestee:
         self.time_slots_china = sorted(self.requestee_info.get('time_slots_china'))
         self._volunteer = None
         self._promised_time_slot = None
+        self.recommendation_filled = False
 
     @property
     def volunteer(self):

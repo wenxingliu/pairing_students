@@ -48,18 +48,21 @@ def main(request_file_path_list: List[str],
     make_recommendations_for_all_unassigned_volunteers(all_requestees=requestees,
                                                        all_volunteers=volunteers)
 
+    if send_email:
+        try:
+            email_to_all_volunteers(volunteers)
+        except:
+            print("Error when sending emails")
+
     compute_paired_data(requestees, log_file)
     compute_volunteers_recommendations(volunteers, log_file)
     compute_volunteers_to_be_paired(volunteers, log_file)
 
-    if send_email:
-        email_to_all_volunteers(volunteers)
-
 
 if __name__ == '__main__':
-    main(volunteer_file_path_list=['1 to 1 English teaching_mock.xlsx'],
+    main(volunteer_file_path_list=[],
          request_file_path_list=['request_cov19_02192020.xlsx', 'requests_yan_an.xlsx'],
-         previously_paired_file_path_list=None,
+         previously_paired_file_path_list=[],
          send_email=False,
          log_file=True)
     print('breakpoint')

@@ -34,6 +34,7 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
             }
 
             paired_list.append(paired_info)
+
     paired_df = pd.DataFrame(paired_list)
     paired_df.sort_values(["volunteer_wechat", "promised_time_slot"])
 
