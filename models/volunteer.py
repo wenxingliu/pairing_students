@@ -27,7 +27,7 @@ class Volunteer:
 
     @property
     def available(self) -> bool:
-        return (self.available_spots > 0) and (len(self.time_slots_china) > 0)
+        return (self.available_spots > 0) and (self.time_slots_china.len > 0)
 
     @property
     def time_slots_utc(self) -> List[TimeSlot]:

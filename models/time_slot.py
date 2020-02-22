@@ -59,6 +59,13 @@ class TimeSlotList:
     def __init__(self, time_slot_list: List[TimeSlot]):
         self.list = sorted(time_slot_list)
 
+    @property
+    def len(self):
+        return len(self.list)
+
+    def pop(self, i):
+        return self.list.pop(i)
+
     def __getitem__(self, i):
         return self.list[i]
 

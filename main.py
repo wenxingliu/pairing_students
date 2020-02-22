@@ -3,7 +3,7 @@ from utils.pairing import compute_requestees, compute_volunteers, pair_for_all
 
 from data_export import compute_paired_data, compute_volunteers_to_be_paired
 
-requestee_df = read_and_clean_requests(xlsx_file_path='data/COV_02192020.xlsx',
+requestee_df = read_and_clean_requests(xlsx_file_path='data/request_02192020.xlsx',
                                        sheet_name='学生信息收集表')
 requestee_df = requestee_df.loc[requestee_df.doctor_family == 1]
 
