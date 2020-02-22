@@ -69,13 +69,16 @@ def read_and_clean_volunteers(xlsx_file_path_list: List[str], sheet_name: str) -
 
 
 def read_previous_paired_results(csv_file_path_list: List[str]) -> pd.DataFrame:
-    paired_results_df = _combine_multiple_csv_files(csv_file_path_list)
+    paired_results_df = _combine_multiple_pairing_csv_files(csv_file_path_list)
 
     paired_results_df['volunteer_email_sent'] = paired_results_df.volunteer_email_sent.apply(convert_str_to_bool)
     paired_results_df["timestamp"] = pd.to_datetime(paired_results_df.email_sent_time_utc)
-    paired_results_df["promised_time_slot"] = pd.to_datetime(paired_results_df.promised_time_slot)
 
     deduped_paired_results_df = dedup_dataframe(paired_results_df, settings.PAIRING_UNIQUE_COLS)
+
+    # only keep ones that had email sent
+    deduped_paired_results_df = deduped_paired_results_df.loc[deduped_paired_results_df.volunteer_email_sent]
+
     return deduped_paired_results_df
 
 

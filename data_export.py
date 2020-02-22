@@ -26,8 +26,8 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
                 "volunteer_wechat": volunteer.parent_wechat,
                 "organization": volunteer.organization,
                 "promised_time_slot": str(promised_time_slot),
-                "slot_start_time": str(promised_time_slot.start),
-                "slot_end_time": str(promised_time_slot.end),
+                "slot_start_time": promised_time_slot.start.strftime("%H:%M"),
+                "slot_end_time": promised_time_slot.end.strftime("%H:%M"),
                 "weekday": promised_time_slot.weekday,
                 "volunteer_email_sent": str(requestee.volunteer.email_sent),
                 "email_sent_time_utc": email_sent_time_str
