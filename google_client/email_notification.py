@@ -59,12 +59,35 @@ def send_email(subject,
     session.quit()
 
 
+def _compute_subject() -> str:
+    return f"From Communities Without Boundaries Foundation: Your friend in China is waiting!"
+
+
+def _compute_receiver(volunteer: Volunteer) -> str:
+    receiver_list = []
+
+    if volunteer.parent_email:
+        receiver_list.append(volunteer.parent_email)
+    if volunteer.volunteer_email:
+        receiver_list.append(volunteer.volunteer_email)
+
+    receiver_str = ','.join(receiver_list)
+
+    return receiver_str
+
+
 def _compute_text(volunteer: Volunteer) -> str:
     if volunteer.paired_student:
-        text = _compute_text_of_assigned_volunteer(volunteer)
+        notification_text = _compute_text_of_assigned_volunteer(volunteer)
     else:
-        text = _compute_text_of_unassigned_volunteer(volunteer)
-    return text
+        notification_text = _compute_text_of_unassigned_volunteer(volunteer)
+
+    body_test = f"""
+    Hi {volunteer.name.title()},
+
+    {notification_text}
+    """
+    return body_test
 
 
 def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
@@ -74,8 +97,6 @@ def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
         student_info += student.formatted_info
 
     body_text = f"""
-    Hi {volunteer.name.title()},
-
     Here is your matched results:
 
     {student_info}
@@ -84,18 +105,12 @@ def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
     return body_text
 
 
-def _compute_subject() -> str:
-    return f"From Communities Without Boundaries Foundation: Your friend in China is waiting!"
-
-
 def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
     student_info = ""
     for student in volunteer.potential_match:
         student_info += student.formatted_info
 
     body_text = f"""
-    Hi {volunteer.name.title()},
-
     Sorry, we were unable to accommodate the time you submitted. 
     For your reference, here are your selected time slots in your local time {volunteer.timezone}:
     
@@ -118,11 +133,3 @@ def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
         """
 
     return body_text
-
-
-def _compute_receiver(volunteer: Volunteer) -> str:
-    if volunteer.parent_email:
-        return volunteer.parent_email
-    if volunteer.volunteer_email:
-        return volunteer.volunteer_email
-
