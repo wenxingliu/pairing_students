@@ -26,7 +26,7 @@ def compute_volunteers_to_be_paired(volunteers: List[Volunteer]):
     to_be_paired_volunteers_list = []
 
     for volunteer in volunteers:
-        if volunteer.available:
+        if volunteer.available and (not volunteer.recommendation_filled):
             available_slots_str = ','.join([str(slot) for slot in volunteer.time_slots_china])
             volunteer_info = {
                 "Volunteer": volunteer.name,
@@ -39,3 +39,27 @@ def compute_volunteers_to_be_paired(volunteers: List[Volunteer]):
     to_be_paired_volunteers_df = pd.DataFrame(to_be_paired_volunteers_list)
 
     return to_be_paired_volunteers_df
+
+
+def compute_volunteers_recommendations(volunteers: List[Volunteer]):
+    recommendation_list = []
+
+    for volunteer in volunteers:
+        available_slots_str = ','.join([str(slot) for slot in volunteer.time_slots_china])
+
+        for request in volunteer.potential_match:
+            request_time_slot = request.time_slots_local
+
+            recommendation_info = {
+                "Volunteer": volunteer.name,
+                "Volunteer Wechat": volunteer.parent_wechat,
+                "Potential Match": request.name,
+                "Volunteer Available Time (China Timezone)": available_slots_str,
+                "Student Available Time (China Timezone)": request_time_slot
+            }
+
+            recommendation_list.append(recommendation_info)
+
+    recommendation_df = pd.DataFrame(recommendation_list)
+
+    return recommendation_df

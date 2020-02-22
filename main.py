@@ -1,26 +1,52 @@
+from data_export import (compute_paired_data,
+                         compute_volunteers_to_be_paired,
+                         compute_volunteers_recommendations)
 from data_mapper import read_and_clean_requests, read_and_clean_volunteers
+from google_client.email_notification import email_to_all_volunteers
+from services.pairing import pair_for_all
+from services.recommendation import make_recommendations_for_all_unassigned_volunteers
 from services.utils.requestee import compute_requestees
 from services.utils.volunteer import compute_volunteers
-from services.pairing import pair_for_all
 
-from data_export import compute_paired_data, compute_volunteers_to_be_paired
+DATA_INPUT_DIR = 'data/input/'
+DATA_OUTPUT_DIR = 'data/outputs/'
 
-requestee_df = read_and_clean_requests(xlsx_file_path='data/request_02192020.xlsx',
-                                       sheet_name='学生信息收集表')
-requestee_df = requestee_df.loc[requestee_df.doctor_family == 1]
 
-volunteer_df = read_and_clean_volunteers(xlsx_file_path='data/1 to 1 English teaching.xlsx',
-                                         sheet_name='Form Responses 1')
+def main(request_file_path: str,
+         volunteer_file_path: str,
+         send_out_email: bool = False,
+         log_results: bool = True):
+    requestee_df = read_and_clean_requests(xlsx_file_path=f'{DATA_INPUT_DIR}/{request_file_path}',
+                                           sheet_name='学生信息收集表')
+    requestee_df = requestee_df.loc[requestee_df.doctor_family == 1]
 
-requestees = compute_requestees(requestee_df)
-volunteers = compute_volunteers(volunteer_df)
+    volunteer_df = read_and_clean_volunteers(xlsx_file_path=f'{DATA_INPUT_DIR}/{volunteer_file_path}',
+                                             sheet_name='Form Responses 1')
 
-pair_for_all(requestees, volunteers)
+    requestees = compute_requestees(requestee_df)
+    volunteers = compute_volunteers(volunteer_df)
 
-paired_df = compute_paired_data(requestees)
-to_be_paired_volunteers_df = compute_volunteers_to_be_paired(volunteers)
+    pair_for_all(all_requestees=requestees, all_volunteers=volunteers)
 
-paired_df.to_csv('data/paired.csv', index=False)
-to_be_paired_volunteers_df.to_csv('data/to_be_paired_volunteers.csv', index=False)
+    make_recommendations_for_all_unassigned_volunteers(all_requestees=requestees,
+                                                       all_volunteers=volunteers)
 
-print('breakpoint')
+    if send_out_email:
+        email_to_all_volunteers(volunteers)
+
+    if log_results:
+        paired_df = compute_paired_data(requestees)
+        recommendation_df = compute_volunteers_recommendations(volunteers)
+        unassigned_volunteers_df = compute_volunteers_to_be_paired(volunteers)
+
+        paired_df.to_csv(f'{DATA_OUTPUT_DIR}/paired.csv', index=False)
+        recommendation_df.to_csv(f'{DATA_OUTPUT_DIR}/recommendation.csv', index=False)
+        unassigned_volunteers_df.to_csv(f'{DATA_OUTPUT_DIR}/unassigned_volunteers.csv', index=False)
+
+
+if __name__ == '__main__':
+    main(volunteer_file_path='1 to 1 English teaching.xlsx',
+         request_file_path='request_02192020.xlsx',
+         send_out_email=False,
+         log_results=True)
+    print('breakpoint')

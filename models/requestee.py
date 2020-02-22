@@ -12,7 +12,7 @@ class Requestee:
         self.scarcity_index = self.requestee_info.get('scarcity_index')
         self.time_slots_china = sorted(self.requestee_info.get('time_slots_china'))
         self._volunteer = None
-        self._promised_time_slot = None
+        self._promised_timeslot = None
 
     @property
     def volunteer(self):
@@ -21,7 +21,7 @@ class Requestee:
     @property
     def promised_time_slot(self):
         """in china timezone"""
-        return self._promised_time_slot
+        return self._promised_timeslot
 
     @property
     def assigned(self):
@@ -44,7 +44,7 @@ class Requestee:
 
     def assign(self, volunteer, timeslot):
         self._volunteer = volunteer
-        self._promised_time_slot = timeslot
+        self._promised_timeslot = timeslot
 
     @property
     def formatted_info(self) -> str:

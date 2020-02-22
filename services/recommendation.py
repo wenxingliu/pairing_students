@@ -6,8 +6,8 @@ from models.requestee import Requestee
 import settings as settings
 
 
-def recommend_for_all_unassigned_volunteers(all_requestees: List[Requestee],
-                                            all_volunteers: List[Volunteer]):
+def make_recommendations_for_all_unassigned_volunteers(all_requestees: List[Requestee],
+                                                       all_volunteers: List[Volunteer]):
     for volunteer in all_volunteers:
         if volunteer.recommendation_filled:
             continue
@@ -34,7 +34,7 @@ def make_recommondation_for_volunteer(volunteer: Volunteer,
 
         for time_slot_r in requestee.time_slots_china:
             for time_slot_v in volunteer.time_slots_china:
-                hours_diff = (time_slot_r.start - time_slot_v.start).total_seconds() / 3600
+                hours_diff = (time_slot_r.fake_start_datetime - time_slot_v.fake_start_datetime).total_seconds() / 3600
                 if abs(hours_diff) < settings.ALLOWED_HOURS_DIFF_IN_RECOMMENDATION:
                     recommendation_list.append(requestee)
                     volunteer.recommend(requestee)

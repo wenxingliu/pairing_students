@@ -10,6 +10,7 @@
 
 __pycache__/*
 config/__pycache__/*
+google_client/__pycache__/*
 models/__pycache__/*
 services/__pycache__/*
 services/utils/__pycache__/
