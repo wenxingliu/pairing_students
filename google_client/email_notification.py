@@ -71,9 +71,7 @@ def _compute_receiver(volunteer: Volunteer) -> str:
     if volunteer.volunteer_email:
         receiver_list.append(volunteer.volunteer_email)
 
-    receiver_str = ','.join(receiver_list)
-
-    return receiver_str
+    return receiver_list
 
 
 def _compute_text(volunteer: Volunteer) -> str:
