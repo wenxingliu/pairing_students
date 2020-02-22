@@ -1,0 +1,14 @@
+.DS_Store
+*.ipynb
+
+~$*.xlsx
+
+.idea/*
+.cache/*
+__pycache__/*
+.ipynb_checkpoints/*
+
+data/*
+utils/__pycache__/*
+models/__pycache__/*
+config/__pycache__/*
