@@ -6,7 +6,7 @@ from email.utils import formatdate
 from email import encoders
 from typing import List
 
-from data.input.private import GMAIL_ACCOUNT, GMAIL_PASSWORD
+from secrets.private import GMAIL_ACCOUNT, GMAIL_PASSWORD
 from models.volunteer import Volunteer
 
 
