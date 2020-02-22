@@ -14,18 +14,22 @@ def email_to_all_volunteers(all_volunteers: List[Volunteer]):
     for volunteer in all_volunteers:
         if volunteer.paired_student or volunteer.recommendation_filled:
             try:
-                send_email(volunteer)
+                send_email_to_volunteer(volunteer)
                 print(f'successfully sent email to {volunteer.name}')
             except:
-                print(f'failed to send email to {volunteer.name}')
+                print(f'failed to send email to {volunteer.name} at \
+                {volunteer.parent_email} or {volunteer.volunteer_email}')
 
 
 def send_email_to_volunteer(volunteer: Volunteer):
-    subject = "Test: Communities Without Boundaries Foundation: Your friend in China is waiting!"
-    send_to = [volunteer.volunteer_email, volunteer.parent_email]
-    text = _compute_text(volunteer)
+    subject = _compute_subject()
+    send_to = _compute_receiver(volunteer)
 
-    send_email(subject=subject, text=text, send_to=send_to)
+    if send_to:
+        text = _compute_text(volunteer)
+        send_email(subject=subject, text=text, send_to=send_to)
+    else:
+        print(f'{volunteer.name} no email address')
 
 
 def send_email(subject,
@@ -81,6 +85,10 @@ def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
     return body_text
 
 
+def _compute_subject() -> str:
+    return f"From Communities Without Boundaries Foundation: Your friend in China is waiting!"
+
+
 def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
     student_info = ""
     for student in volunteer.potential_match:
@@ -104,3 +112,11 @@ def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
     """
 
     return body_text
+
+
+def _compute_receiver(volunteer: Volunteer) -> str:
+    if volunteer.parent_email:
+        return volunteer.parent_email
+    if volunteer.volunteer_email:
+        return volunteer.volunteer_email
+

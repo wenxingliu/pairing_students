@@ -45,8 +45,8 @@ def main(request_file_path: str,
 
 
 if __name__ == '__main__':
-    main(volunteer_file_path='1 to 1 English teaching.xlsx',
+    main(volunteer_file_path='1 to 1 English teaching_mock.xlsx',
          request_file_path='request_02192020.xlsx',
-         send_out_email=False,
+         send_out_email=True,
          log_results=True)
     print('breakpoint')
