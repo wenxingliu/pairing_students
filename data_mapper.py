@@ -1,6 +1,6 @@
 import pandas as pd
 
-from config import settings as settings
+import settings as settings
 from services.utils.common import dedup_dataframe, convert_bool_to_int, cleanup_gender, get_digits
 from services.utils.requestee import cleanup_utc_time_slots_requestee, compute_scarcity_index
 from services.utils.volunteer import compute_available_time_slots_volunteer

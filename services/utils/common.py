@@ -2,7 +2,7 @@ import datetime as dt
 import pandas as pd
 from typing import List
 
-from config import settings as settings
+import settings as settings
 
 
 def dedup_dataframe(df: pd.DataFrame, idx_cols: List[str]) -> pd.DataFrame:

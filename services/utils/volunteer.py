@@ -3,7 +3,7 @@ from typing import List
 
 import pandas as pd
 
-from config import settings as settings
+import settings as settings
 from models.time_slot import TimeSlot, TimeSlotList
 from models.volunteer import Volunteer
 from services.utils.common import cleanup_time_slot_day, compute_time_part_from_str

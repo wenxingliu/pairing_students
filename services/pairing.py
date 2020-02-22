@@ -3,7 +3,7 @@ from typing import List
 from models.volunteer import Volunteer
 from models.requestee import Requestee
 
-from config import settings as settings
+import settings as settings
 
 
 def pair_for_all(all_requestees: List[Requestee], all_volunteers: List[Volunteer]):

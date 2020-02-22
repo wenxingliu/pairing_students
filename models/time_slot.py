@@ -1,7 +1,7 @@
 import datetime as dt
 from typing import List
 
-from config import settings as settings
+import settings as settings
 
 
 class TimeSlot:

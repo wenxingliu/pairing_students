@@ -6,7 +6,7 @@ from email.utils import formatdate
 from email import encoders
 from typing import List
 
-from config import app_env
+from secrets.private import GMAIL_ACCOUNT, GMAIL_PASSWORD
 from models.volunteer import Volunteer
 
 
@@ -27,9 +27,9 @@ def send_email_to_volunteer(volunteer: Volunteer):
 def send_email(subject,
                text,
                send_to,
-               send_from=app_env.GMAIL_ACCOUNT,
-               username=app_env.GMAIL_ACCOUNT,
-               password=app_env.GMAIL_PASSWORD,
+               send_from=GMAIL_ACCOUNT,
+               username=GMAIL_ACCOUNT,
+               password=GMAIL_PASSWORD,
                file=None):
     try:
         msg = MIMEMultipart()
