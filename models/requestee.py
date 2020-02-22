@@ -64,8 +64,11 @@ class Requestee:
         COVID-19 Patient Family: {"Yes" if self.patient_family else "No"}\n
         """
 
-    def __repr__(self):
+    def __str__(self):
         return f"{self.name} request {self.volunteer_gender}"
+
+    def __repr__(self):
+        return str(self)
 
     def __hash__(self):
         return hash((self.name, self.parent_wechat))

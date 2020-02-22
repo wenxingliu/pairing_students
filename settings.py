@@ -31,6 +31,7 @@ VOLUNTEER_COLUMNS_MAPPER = {
 
 REQUESTEE_UNIQUE_COLS = ["parent_wechat", "requestee"]
 VOLUNTEER_UNIQUE_COLS = ["name", "parent_wechat"]
+PAIRING_UNIQUE_COLS = ["Requestee Wechat", "Volunteer Wechat"]
 
 
 VOLUNTEER_TIME_SLOT_COLS = [

@@ -13,6 +13,8 @@ def pair_for_all(all_requestees: List[Requestee], all_volunteers: List[Volunteer
 
 def find_pair(requestee: Requestee, all_volunteers: List[Volunteer]):
 
+    matched_volunteer = None
+
     for volunteer in all_volunteers:
 
         if not volunteer.available:
@@ -25,9 +27,11 @@ def find_pair(requestee: Requestee, all_volunteers: List[Volunteer]):
         overlapped_time = volunteer.overlapping_china_time_slots(requestee.time_slots_china)
 
         if overlapped_time:
+            matched_volunteer = volunteer
             promised_time = sorted(overlapped_time, key=lambda x: x.scarcity_index)[0]
-            volunteer.assign(requestee, promised_time)
-            requestee.assign(volunteer, promised_time)
-            return
+            matched_volunteer.assign(requestee, promised_time)
+            requestee.assign(matched_volunteer, promised_time)
+            break
 
-    print(f'no match for {requestee}')
+    if matched_volunteer is None:
+        print(f'no match for {requestee}')

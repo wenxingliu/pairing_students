@@ -6,15 +6,19 @@ from email.utils import formatdate
 from email import encoders
 from typing import List
 
-from secrets.private import GMAIL_ACCOUNT, GMAIL_PASSWORD
+from data.input.private import GMAIL_ACCOUNT, GMAIL_PASSWORD
 from models.volunteer import Volunteer
 
 
 def email_to_all_volunteers(all_volunteers: List[Volunteer]):
     for volunteer in all_volunteers:
         try:
-            send_email_to_volunteer(volunteer)
-            print(f'successfully sent email to {volunteer.name}')
+            if volunteer.email_sent:
+                print(f'Email already sent to {volunteer} at {volunteer.email_sent_time_utc}')
+            else:
+                send_email_to_volunteer(volunteer)
+                volunteer.email_sent = True
+                print(f'successfully sent email to {volunteer.name}')
         except:
             print(f'failed to send email to {volunteer.name} at \
             {volunteer.parent_email} or {volunteer.volunteer_email}')

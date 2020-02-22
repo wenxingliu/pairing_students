@@ -25,6 +25,13 @@ def convert_bool_to_int(str_val: str) -> int:
         return None
 
 
+def convert_str_to_bool(bool_str: str) -> bool:
+    if str(bool_str).lower() == 'true':
+        return True
+    else:
+        return False
+
+
 def cleanup_gender(gender_val: str) -> str:
     try:
         if gender_val.lower() in ['男', 'male', 'm', 'boy', 'b']:

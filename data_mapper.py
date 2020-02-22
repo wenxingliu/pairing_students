@@ -2,7 +2,11 @@ import pandas as pd
 from typing import List
 
 import settings as settings
-from services.utils.common import dedup_dataframe, convert_bool_to_int, cleanup_gender, get_digits
+from services.utils.common import (dedup_dataframe,
+                                   convert_str_to_bool,
+                                   convert_bool_to_int,
+                                   cleanup_gender,
+                                   get_digits)
 from services.utils.requestee import cleanup_utc_time_slots_requestee, compute_scarcity_index
 from services.utils.volunteer import compute_available_time_slots_volunteer
 from services.utils.timezone_conversion import compute_timezone_utc_offset_dict
@@ -11,7 +15,7 @@ DATA_INPUT_DIR = 'data/input/'
 
 
 def read_and_clean_requests(xlsx_file_path_list: List[str], sheet_name: str) -> pd.DataFrame:
-    request_df = _combine_multiple_files(xlsx_file_path_list, sheet_name)
+    request_df = _combine_multiple_xlsx_files(xlsx_file_path_list, sheet_name)
 
     request_df.rename(columns=settings.REQUEST_COLUMNS_MAPPER, inplace=True)
     request_df['timestamp'] = pd.to_datetime(request_df.timestamp)
@@ -37,7 +41,7 @@ def read_and_clean_requests(xlsx_file_path_list: List[str], sheet_name: str) -> 
 
 
 def read_and_clean_volunteers(xlsx_file_path_list: List[str], sheet_name: str) -> pd.DataFrame:
-    volunteer_df = _combine_multiple_files(xlsx_file_path_list, sheet_name)
+    volunteer_df = _combine_multiple_xlsx_files(xlsx_file_path_list, sheet_name)
 
     volunteer_df.columns = [col.replace("'", "") for col in volunteer_df.columns]
     volunteer_df.rename(columns=settings.VOLUNTEER_COLUMNS_MAPPER, inplace=True)
@@ -66,8 +70,31 @@ def read_and_clean_volunteers(xlsx_file_path_list: List[str], sheet_name: str) -
     return volunteer_df
 
 
-def _combine_multiple_files(xlsx_file_path_list: List[str],
-                            sheet_name: str) -> pd.DataFrame:
+def read_previous_paired_results(csv_file_path_list: List[str]) -> pd.DataFrame:
+    paired_results_df = _combine_multiple_csv_files(csv_file_path_list)
+
+    paired_results_df['volunteer_email_sent'] = paired_results_df.volunteer_email_sent.apply(convert_str_to_bool)
+    paired_results_df["timestamp"] = pd.to_datetime(paired_results_df.email_sent_time_utc)
+    paired_results_df["promised_time_slot"] = pd.to_datetime(paired_results_df.promised_time_slot)
+
+    deduped_paired_results_df = dedup_dataframe(paired_results_df, settings.PAIRING_UNIQUE_COLS)
+    return deduped_paired_results_df
+
+
+def _combine_multiple_csv_files(csv_file_path_list: List[str]) -> pd.DataFrame:
+    df_list = []
+
+    for csv_file_path in csv_file_path_list:
+        sub_df = pd.read_csv(f'{DATA_INPUT_DIR}/{csv_file_path}')
+        df_list.append(sub_df)
+
+    combined_df = pd.concat(df_list, axis=0)
+
+    return combined_df
+
+
+def _combine_multiple_xlsx_files(xlsx_file_path_list: List[str],
+                                 sheet_name: str) -> pd.DataFrame:
     df_list = []
 
     for xlsx_file_path in xlsx_file_path_list:
