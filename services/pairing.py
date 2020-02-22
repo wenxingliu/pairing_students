@@ -8,7 +8,8 @@ import settings as settings
 
 def pair_for_all(all_requestees: List[Requestee], all_volunteers: List[Volunteer]):
     for request in all_requestees:
-        find_pair(request, all_volunteers)
+        if not request.assigned:
+            find_pair(request, all_volunteers)
 
 
 def find_pair(requestee: Requestee, all_volunteers: List[Volunteer]):

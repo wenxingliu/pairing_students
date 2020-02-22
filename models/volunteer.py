@@ -81,10 +81,10 @@ class Volunteer:
         self._email_sent_time_utc = sent_time
 
     def _remove_china_time_slot(self, time_slot: TimeSlot):
-        for i, volunteer_time_slot in enumerate(self._time_slots_china):
+        for i, volunteer_time_slot in enumerate(self.time_slots_china):
             if volunteer_time_slot == time_slot:
                 break
-        self._time_slots_china.pop(i)
+        self.time_slots_china.pop(i)
 
     def __str__(self):
         return f"{self.name} {self.timezone} (Age {self.age}; Gender: {self.gender})"

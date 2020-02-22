@@ -10,12 +10,14 @@ class PairedInfo:
         self.paired_info = paired_info
         self.volunteer_wechat = self.paired_info.get('volunteer_wechat')
         self.requestee_wechat = self.paired_info.get('requestee_wechat')
+        self.volunteer_name = self.paired_info.get('volunteer')
+        self.requestee_name = self.paired_info.get('requestee')
         self.promised_time_slot_str = self.paired_info.get('promised_time_slot')
         self.slot_start_time = self.paired_info.get('slot_start_time')
         self.slot_end_time = self.paired_info.get('slot_end_time')
         self.weekday = self.paired_info.get('weekday')
         self.volunteer_email_sent = self.paired_info.get('volunteer_email_sent')
-        self.email_sent_time_utc = self.paired_info.get('email_sent_time_utc')
+        self.email_sent_time_utc = self.paired_info.get('timestamp')
         self._promised_time_slot = None
 
     @property
@@ -38,7 +40,7 @@ class PairedInfo:
                 return volunteer
 
     def __str__(self):
-        return f"{self.volunteer_wechat} <-> {self.requestee_wechat}"
+        return f"{self.volunteer_name} ({self.volunteer_wechat}) -> {self.requestee_name} ({self.requestee_wechat})"
 
     def __repr__(self):
         return str(self)
