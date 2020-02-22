@@ -17,7 +17,7 @@ def email_to_all_volunteers(all_volunteers: List[Volunteer]):
                 print(f'Email already sent to {volunteer} at {volunteer.email_sent_time_utc}')
             else:
                 send_email_to_volunteer(volunteer)
-                volunteer.email_sent = True
+                volunteer.mark_email_sent()
                 print(f'successfully sent email to {volunteer.name}')
         except:
             print(f'failed to send email to {volunteer.name} at \
