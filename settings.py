@@ -29,8 +29,8 @@ VOLUNTEER_COLUMNS_MAPPER = {
 }
 
 
-REQUESTEE_UNIQUE_COLS = ["parent_wechat", "requestee"]
-VOLUNTEER_UNIQUE_COLS = ["name", "parent_wechat"]
+REQUESTEE_UNIQUE_COLS = ["parent_wechat"]
+VOLUNTEER_UNIQUE_COLS = ["parent_wechat"]
 PAIRING_UNIQUE_COLS = ["requestee_wechat", "volunteer_wechat"]
 
 
@@ -51,7 +51,7 @@ DUMMY_MONDAY_DATE = '2001-01-01'  # A Monday
 
 CHINA_UTC_OFFSET = 8
 
-AGE_DIFF_THRESHOLD = 10
+AGE_DIFF_THRESHOLD = 3
 ALLOWED_HOURS_DIFF_IN_RECOMMENDATION = 1
 MAX_RECOMMENDATION_NUMBER = 3
 

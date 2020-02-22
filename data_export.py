@@ -21,11 +21,11 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
                 email_sent_time_str = settings.DUMMY_MONDAY_DATE
 
             paired_info = {
-                "requestee": requestee.name,
-                "requestee_wechat": requestee.parent_wechat,
+                "organization": volunteer.organization,
                 "volunteer": volunteer.name,
                 "volunteer_wechat": volunteer.parent_wechat,
-                "organization": volunteer.organization,
+                "requestee": requestee.name,
+                "requestee_wechat": requestee.parent_wechat,
                 "promised_time_slot": str(promised_time_slot),
                 "slot_start_time": promised_time_slot.start.strftime("%H:%M"),
                 "slot_end_time": promised_time_slot.end.strftime("%H:%M"),
@@ -37,7 +37,7 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
             paired_list.append(paired_info)
 
     paired_df = pd.DataFrame(paired_list)
-    paired_df.sort_values(["volunteer_wechat", "promised_time_slot"])
+    paired_df.sort_values(["organization", "volunteer_wechat", "promised_time_slot"], inplace=True)
 
     if log_file:
         file_path = _compute_export_file_path('paired.csv', settings.PAIRING_OUTPUT_DIR)
@@ -53,6 +53,7 @@ def compute_unassigned_volunteers(volunteers: List[Volunteer], log_file: bool = 
         if volunteer.available and (not volunteer.recommendation_made):
             available_slots_str = ','.join([str(slot) for slot in volunteer.time_slots_china])
             volunteer_info = {
+                "Organization": volunteer.organization,
                 "Volunteer": volunteer.name,
                 "Volunteer Wechat": volunteer.parent_wechat,
                 "Willing To Take": volunteer.num_pairs,
@@ -63,6 +64,7 @@ def compute_unassigned_volunteers(volunteers: List[Volunteer], log_file: bool = 
             unassigned_volunteer_list.append(volunteer_info)
 
     unassigned_volunteer_df = pd.DataFrame(unassigned_volunteer_list)
+    unassigned_volunteer_df.sort_values(['Organization', 'Volunteer'], inplace=True)
 
     if log_file:
         file_path = _compute_export_file_path('unassigned_volunteers.csv', settings.DATA_OUTPUT_DIR)
@@ -81,6 +83,7 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
             request_time_slot = request.time_slots_local
 
             recommendation_info = {
+                "Organization": volunteer.organization,
                 "Volunteer": volunteer.name,
                 "Volunteer Wechat": volunteer.parent_wechat,
                 "Potential Match": request.name,
@@ -91,6 +94,8 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
             recommendation_list.append(recommendation_info)
 
     recommendation_df = pd.DataFrame(recommendation_list)
+    recommendation_df.sort_values(['Organization', 'Volunteer',
+                                   'Volunteer Available Time (China Timezone)'], inplace=True)
 
     if log_file:
         file_path = _compute_export_file_path('recommendations.csv', settings.DATA_OUTPUT_DIR)
