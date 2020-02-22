@@ -13,11 +13,15 @@ from models.volunteer import Volunteer
 def email_to_all_volunteers(all_volunteers: List[Volunteer]):
     for volunteer in all_volunteers:
         if volunteer.paired_student or volunteer.recommendation_filled:
-            send_email(volunteer)
+            try:
+                send_email(volunteer)
+                print(f'successfully sent email to {volunteer.name}')
+            except:
+                print(f'failed to send email to {volunteer.name}')
 
 
 def send_email_to_volunteer(volunteer: Volunteer):
-    subject = "Communities Without Boundaries Foundation: Your friend in China is waiting!"
+    subject = "Test: Communities Without Boundaries Foundation: Your friend in China is waiting!"
     send_to = [volunteer.volunteer_email, volunteer.parent_email]
     text = _compute_text(volunteer)
 
@@ -31,29 +35,25 @@ def send_email(subject,
                username=GMAIL_ACCOUNT,
                password=GMAIL_PASSWORD,
                file=None):
-    try:
-        msg = MIMEMultipart()
-        msg['From'] = send_from
-        msg['To'] = send_to
-        msg['Date'] = formatdate(localtime=True)
-        msg['Subject'] = subject
-        msg.attach(MIMEText(text))
+    msg = MIMEMultipart()
+    msg['From'] = send_from
+    msg['To'] = send_to
+    msg['Date'] = formatdate(localtime=True)
+    msg['Subject'] = subject
+    msg.attach(MIMEText(text))
 
-        part = MIMEBase('application', "octet-stream")
-        if file is not None:
-            part.set_payload(open(file, "rb").read())
-            encoders.encode_base64(part)
-            part.add_header('Content-Disposition', 'attachment; filename="%s"' % file)
-            msg.attach(part)
+    part = MIMEBase('application', "octet-stream")
+    if file is not None:
+        part.set_payload(open(file, "rb").read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition', 'attachment; filename="%s"' % file)
+        msg.attach(part)
 
-        session = smtplib.SMTP("smtp.gmail.com", 587)
-        session.starttls()
-        session.login(username, password)
-        session.sendmail(send_from, send_to, msg.as_string())
-        session.quit()
-        print('successfully sent the email')
-    except:
-        print("failed to send email")
+    session = smtplib.SMTP("smtp.gmail.com", 587)
+    session.starttls()
+    session.login(username, password)
+    session.sendmail(send_from, send_to, msg.as_string())
+    session.quit()
 
 
 def _compute_text(volunteer: Volunteer) -> str:
