@@ -3,7 +3,7 @@ REQUEST_COLUMNS_MAPPER = {
     "提交者（自动）": "requestee",
     "家长微信号（必填）": "parent_wechat",
     "孩子性别（必填）": "gender",
-    "孩子年龄（必填）": "age",
+    "孩子年龄（必填）": "age_raw",
     "孩子学习英文几年（必填）": "english_learning_in_years",
     "选择教学时间（必填）": "time_slot_day",
     "选择教学时间段（必填）": "time_slot_time",
@@ -17,8 +17,8 @@ VOLUNTEER_COLUMNS_MAPPER = {
     "Timestamp": "timestamp",
     "Volunteers Name": "name",
     "Volunteers Email": "volunteer_email",
-    # "Parents name": "parent",
-    # "Parents Email": "parent_email",
+    "Parents name": "parent",
+    "Parents Email": "parent_email",
     "Parents Wechat ID": "parent_wechat",
     "Volunteers age": "age",
     "Volunteers gender": "volunteer_gender",
@@ -51,6 +51,7 @@ DUMMY_MONDAY_DATE = '2001-01-01'  # A Monday
 CHINA_UTC_OFFSET = 8
 
 AGE_DIFF_THRESHOLD = 10
+ALLOWED_HOURS_DIFF_IN_RECOMMENDATION = 1
 
 PRIORITY_RULES = ["doctor_family", "patient_family"]
 

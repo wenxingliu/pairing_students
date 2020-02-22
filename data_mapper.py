@@ -1,10 +1,10 @@
 import pandas as pd
 
 from config import settings as settings
-from utils.common import dedup_dataframe, convert_bool_to_int, cleanup_gender, get_digits
-from utils.requestee import cleanup_utc_time_slots_requestee, compute_scarcity_index
-from utils.volunteer import compute_available_time_slots_volunteer
-from utils.timezone_conversion import compute_timezone_utc_offset_dict
+from services.utils.common import dedup_dataframe, convert_bool_to_int, cleanup_gender, get_digits
+from services.utils.requestee import cleanup_utc_time_slots_requestee, compute_scarcity_index
+from services.utils.volunteer import compute_available_time_slots_volunteer
+from services.utils.timezone_conversion import compute_timezone_utc_offset_dict
 
 
 def read_and_clean_requests(xlsx_file_path: str, sheet_name: str) -> pd.DataFrame:
@@ -20,7 +20,7 @@ def read_and_clean_requests(xlsx_file_path: str, sheet_name: str) -> pd.DataFram
     request_df['gender'] = request_df.gender.apply(cleanup_gender)
     request_df['volunteer_gender'] = request_df.volunteer_gender.apply(cleanup_gender)
 
-    request_df['age'] = request_df.age.apply(get_digits)
+    request_df['age'] = request_df.age_raw.apply(get_digits)
 
     request_df['time_slots_china'] = request_df.apply(
         lambda r: cleanup_utc_time_slots_requestee(r['time_slot_time'], r['time_slot_day']),
@@ -55,6 +55,7 @@ def read_and_clean_volunteers(xlsx_file_path: str, sheet_name: str) -> pd.DataFr
     volunteer_df.fillna("", inplace=True)
 
     required_cols = list(settings.VOLUNTEER_COLUMNS_MAPPER.values()) + ['utc_offset', 'time_slots_local']
-    volunteer_df = volunteer_df[required_cols]
+    common_cols = list(set(required_cols).intersection(volunteer_df.columns))
+    volunteer_df = volunteer_df[common_cols]
 
     return volunteer_df

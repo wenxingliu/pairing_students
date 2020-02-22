@@ -1,5 +1,5 @@
 from data_mapper import read_and_clean_requests, read_and_clean_volunteers
-from utils.pairing import compute_requestees, compute_volunteers, pair_for_all
+from services.utils import compute_requestees, compute_volunteers, pair_for_all
 
 REQUEST_DF = read_and_clean_requests(xlsx_file_path='tests/mock_data/requestee.xlsx',
                                      sheet_name='学生信息收集表')

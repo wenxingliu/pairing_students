@@ -1,18 +1,21 @@
+# cache files
 .DS_Store
 *.ipynb
-
 ~$*.xlsx
 
 .idea/*
 .cache/*
-__pycache__/*
 .ipynb_checkpoints/*
-
-data/*
-utils/__pycache__/*
-models/__pycache__/*
-config/__pycache__/*
 .pytest_cache/*
+
+__pycache__/*
+config/__pycache__/*
+models/__pycache__/*
+services/__pycache__/*
+services/utils/__pycache__/
 tests/.pytest_cache/*
 
+
+# sensitive data
+data/*
 config/app_env.py

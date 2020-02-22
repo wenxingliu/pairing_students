@@ -1,9 +1,12 @@
 from collections import Counter
 import datetime as dt
+from typing import List
+
 import pandas as pd
 
+from models.requestee import Requestee
 from models.time_slot import TimeSlot, TimeSlotList
-from utils.common import cleanup_time_slot_day, compute_time_part_from_str
+from services.utils.common import cleanup_time_slot_day, compute_time_part_from_str
 
 
 def cleanup_utc_time_slots_requestee(time_str: str, day_int: str) -> TimeSlotList:
@@ -58,3 +61,15 @@ def _assign_scarcity_metrics_to_requestee(time_slot_list, scarcity_dict) -> int:
         time_slot.scarcity_index = scarcity_index
         scarcity_index_list.append(scarcity_index)
     return max(scarcity_index_list)
+
+
+def compute_requestees(requestee_df: pd.DataFrame) -> List[Requestee]:
+    requestees = []
+
+    for requestee_info in requestee_df.T.to_dict().values():
+        requestee = Requestee(requestee_info)
+        requestees.append(requestee)
+
+    sorted_requestees = sorted(requestees, key=lambda s: s.priority)
+
+    return sorted_requestees

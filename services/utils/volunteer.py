@@ -5,7 +5,8 @@ import pandas as pd
 
 from config import settings as settings
 from models.time_slot import TimeSlot, TimeSlotList
-from utils.common import cleanup_time_slot_day, compute_time_part_from_str
+from models.volunteer import Volunteer
+from services.utils.common import cleanup_time_slot_day, compute_time_part_from_str
 
 
 def compute_available_time_slots_volunteer(data_row) -> TimeSlotList:
@@ -51,3 +52,13 @@ def _complete_time_string(time_str):
     if ":" not in time_str:
         time_str = f"{time_str}:00"
     return time_str
+
+
+def compute_volunteers(volunteer_df: pd.DataFrame) -> List[Volunteer]:
+    volunteers = []
+
+    for volunteer_info in volunteer_df.T.to_dict().values():
+        volunteer = Volunteer(volunteer_info)
+        volunteers.append(volunteer)
+
+    return volunteers

@@ -1,5 +1,7 @@
 from data_mapper import read_and_clean_requests, read_and_clean_volunteers
-from utils.pairing import compute_requestees, compute_volunteers, pair_for_all
+from services.utils.requestee import compute_requestees
+from services.utils.volunteer import compute_volunteers
+from services.pairing import pair_for_all
 
 from data_export import compute_paired_data, compute_volunteers_to_be_paired
 

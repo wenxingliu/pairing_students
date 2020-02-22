@@ -6,7 +6,9 @@ class Volunteer:
     def __init__(self, volunteer_info: dict):
         self.volunteer_info = volunteer_info
         self.name = self.volunteer_info.get('name')
+        self.volunteer_email = self.volunteer_info.get('volunteer_email')
         self.parent_wechat = self.volunteer_info.get('parent_wechat')
+        self.parent_email = self.volunteer_info.get('parent_email')
         self.time_slots_local = sorted(self.volunteer_info.get('time_slots_local'))
         self.utc_offset = self.volunteer_info.get('utc_offset')
         self.gender = self.volunteer_info.get('volunteer_gender')
@@ -16,10 +18,19 @@ class Volunteer:
         self._time_slots_utc = None
         self._time_slots_china = None
         self._paired_student = []
+        self._potential_match = []
 
     @property
     def paired_student(self):
         return self._paired_student
+
+    @property
+    def recommendation_filled(self):
+        return self.available and (len(self.potential_match) > 0)
+
+    @property
+    def potential_match(self):
+        return self._potential_match
 
     @property
     def available_spots(self):
@@ -50,6 +61,9 @@ class Volunteer:
         """promised_time_slot in china timezone"""
         self._paired_student.append(student)
         self._remove_china_time_slot(promised_time_slot)
+
+    def recommend(self, student):
+        self._potential_match.append(student)
 
     def _remove_china_time_slot(self, time_slot: TimeSlot):
         for i, volunteer_time_slot in enumerate(self._time_slots_china):

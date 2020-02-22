@@ -1,8 +1,7 @@
 import datetime as dt
 from data_mapper import read_and_clean_volunteers
 from models.time_slot import TimeSlot, TimeSlotList
-from models.volunteer import Volunteer
-from utils.pairing import compute_volunteers
+from services.utils import compute_volunteers
 
 VOLUNTEER_DF = read_and_clean_volunteers(xlsx_file_path='tests/mock_data/volunteer.xlsx',
                                          sheet_name='Form Responses 1')

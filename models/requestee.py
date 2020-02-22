@@ -12,7 +12,7 @@ class Requestee:
         self.scarcity_index = self.requestee_info.get('scarcity_index')
         self.time_slots_china = sorted(self.requestee_info.get('time_slots_china'))
         self._volunteer = None
-        self._promised_timeslot = None
+        self._promised_time_slot = None
 
     @property
     def volunteer(self):
@@ -21,7 +21,7 @@ class Requestee:
     @property
     def promised_time_slot(self):
         """in china timezone"""
-        return self._promised_timeslot
+        return self._promised_time_slot
 
     @property
     def assigned(self):
@@ -44,7 +44,25 @@ class Requestee:
 
     def assign(self, volunteer, timeslot):
         self._volunteer = volunteer
-        self._promised_timeslot = timeslot
+        self._promised_time_slot = timeslot
+
+    @property
+    def formatted_info(self) -> str:
+        if self.assigned:
+            time_str = f"Tentative Time (Beijing Time): {self.promised_time_slot}"
+        else:
+            time_str = f"Preferred Time (Beijing Time): {self.time_slots_local}"
+        return f"""
+        Name: {self.name.title()}
+        {time_str} 
+        Age: {self.requestee_info.get('age_raw')}
+        Gender: {self.gender.title()}
+        Parent Wechat: {self.parent_wechat}
+        English Learning (Years): {self.requestee_info.get('english_learning_in_years')}
+        Preferred Content: {self.requestee_info.get('content')}
+        Doctor Family: {"Yes" if self.doctor_family else "No"}
+        COVID-19 Patient Family: {"Yes" if self.patient_family else "No"}\n
+        """
 
     def __repr__(self):
         return f"{self.name} request {self.volunteer_gender}"
