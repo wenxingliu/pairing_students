@@ -5,12 +5,15 @@ import settings as settings
 
 
 class TimeSlot:
-    def __init__(self, start: dt.datetime, end: dt.datetime, weekday: int = None):
+    def __init__(self, start: dt.datetime,
+                 end: dt.datetime,
+                 weekday: int = None,
+                 scarcity_index: int = None):
         self.start = start.time()
         self.end = end.time()
         self.weekday = weekday
         self.weekday_name = settings.WEEKDAY_NUMBER_MAPPER[self.weekday]
-        self.scarcity_index = None
+        self.scarcity_index = scarcity_index
         self._fake_start_datetime = None
         self._fake_end_datetime = None
 
@@ -82,7 +85,10 @@ def local_time_slot_to_utc(time_slots_local, utc_offset):
         utc_start = time_slot.fake_start_datetime - dt.timedelta(hours=utc_offset)
         utc_end = time_slot.fake_end_datetime - dt.timedelta(hours=utc_offset)
         utc_weekday = utc_start.weekday()
-        utc_time_slot = TimeSlot(start=utc_start, end=utc_end, weekday=utc_weekday)
+        utc_time_slot = TimeSlot(start=utc_start,
+                                 end=utc_end,
+                                 weekday=utc_weekday,
+                                 scarcity_index=time_slot.scarcity_index)
         utc_time_slots.append(utc_time_slot)
     return TimeSlotList(utc_time_slots)
 
@@ -93,6 +99,9 @@ def utc_time_slot_to_china_tz(time_slots_utc):
         china_start = time_slot.fake_start_datetime + dt.timedelta(hours=settings.CHINA_UTC_OFFSET)
         china_end = time_slot.fake_end_datetime + dt.timedelta(hours=settings.CHINA_UTC_OFFSET)
         china_weekday = china_start.weekday()
-        china_time_slot = TimeSlot(start=china_start, end=china_end, weekday=china_weekday)
+        china_time_slot = TimeSlot(start=china_start,
+                                   end=china_end,
+                                   weekday=china_weekday,
+                                   scarcity_index=time_slot.scarcity_index)
         china_time_slots.append(china_time_slot)
     return TimeSlotList(china_time_slots)

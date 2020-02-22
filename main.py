@@ -1,7 +1,8 @@
 from typing import List
 from data_export import (compute_paired_data,
-                         compute_volunteers_to_be_paired,
-                         compute_volunteers_recommendations)
+                         compute_unassigned_volunteers,
+                         compute_volunteers_recommendations,
+                         compute_unassgined_requestee)
 from data_mapper import (read_and_clean_requests,
                          read_and_clean_volunteers,
                          read_previous_paired_results)
@@ -23,7 +24,6 @@ def main(request_file_path_list: List[str],
     # Step 1: Read volunteer data and request data from files
     requestee_df = read_and_clean_requests(xlsx_file_path_list=request_file_path_list,
                                            sheet_name='学生信息收集表')
-    requestee_df = requestee_df.loc[requestee_df.doctor_family == 1]
 
     volunteer_df = read_and_clean_volunteers(xlsx_file_path_list=volunteer_file_path_list,
                                              sheet_name='Form Responses 1')
@@ -54,15 +54,18 @@ def main(request_file_path_list: List[str],
         except:
             print("Error when sending emails")
 
-    compute_paired_data(requestees, log_file)
-    compute_volunteers_recommendations(volunteers, log_file)
-    compute_volunteers_to_be_paired(volunteers, log_file)
+    paired_df = compute_paired_data(requestees, log_file)
+    recommendation_df = compute_volunteers_recommendations(volunteers, log_file)
+    unassigned_volunteers_df = compute_unassigned_volunteers(volunteers, log_file)
+    unassigned_requestee_df = compute_unassgined_requestee(requestees, log_file)
+
+    return [paired_df, recommendation_df, unassigned_volunteers_df, unassigned_requestee_df]
 
 
 if __name__ == '__main__':
-    main(volunteer_file_path_list=[],
-         request_file_path_list=['request_cov19_02192020.xlsx', 'requests_yan_an.xlsx'],
-         previously_paired_file_path_list=[],
-         send_email=False,
-         log_file=True)
+    df_list = main(volunteer_file_path_list=[],
+                   request_file_path_list=['request_cov19_02192020', 'requests_yan_an'],
+                   previously_paired_file_path_list=None,
+                   send_email=False,
+                   log_file=True)
     print('breakpoint')

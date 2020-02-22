@@ -9,6 +9,7 @@ import settings as settings
 
 def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
     paired_list = []
+
     for requestee in requestees:
         if requestee.assigned:
             volunteer = requestee.volunteer
@@ -45,28 +46,29 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
     return paired_df
 
 
-def compute_volunteers_to_be_paired(volunteers: List[Volunteer], log_file: bool = True):
-    to_be_paired_volunteers_list = []
+def compute_unassigned_volunteers(volunteers: List[Volunteer], log_file: bool = True):
+    unassigned_volunteer_list = []
 
     for volunteer in volunteers:
-        if volunteer.available and (not volunteer.recommendation_filled):
+        if volunteer.available and (not volunteer.recommendation_made):
             available_slots_str = ','.join([str(slot) for slot in volunteer.time_slots_china])
             volunteer_info = {
                 "Volunteer": volunteer.name,
                 "Volunteer Wechat": volunteer.parent_wechat,
                 "Willing To Take": volunteer.num_pairs,
                 "Current Availability": volunteer.available_spots,
-                "Available Time (China Timezone)": available_slots_str
+                "Available Time (China Timezone)": available_slots_str,
+                "Recommendation Made": volunteer.recommendation_made
             }
-            to_be_paired_volunteers_list.append(volunteer_info)
+            unassigned_volunteer_list.append(volunteer_info)
 
-    to_be_paired_volunteers_df = pd.DataFrame(to_be_paired_volunteers_list)
+    unassigned_volunteer_df = pd.DataFrame(unassigned_volunteer_list)
 
     if log_file:
         file_path = _compute_export_file_path('unassigned_volunteers.csv', settings.DATA_OUTPUT_DIR)
-        to_be_paired_volunteers_df.to_csv(file_path, index=False)
+        unassigned_volunteer_df.to_csv(file_path, index=False)
 
-    return to_be_paired_volunteers_df
+    return unassigned_volunteer_df
 
 
 def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bool = True):
@@ -95,6 +97,39 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
         recommendation_df.to_csv(file_path, index=False)
 
     return recommendation_df
+
+
+def compute_unassgined_requestee(requestees: List[Requestee], log_file: bool = True) -> pd.DataFrame:
+    left_requestee_list = []
+
+    for requestee in requestees:
+
+        if requestee.assigned:
+            continue
+
+        requestee_info = {
+            "timestamp": requestee.timestamp,
+            "requestee": requestee.name.title(),
+            "requestee_wechat": requestee.parent_wechat,
+            "age": requestee.age,
+            "gender": requestee.gender,
+            "preferred_match_gender": requestee.volunteer_gender,
+            "english_learning_in_years": requestee.requestee_info.get('english_learning_in_years'),
+            "doctor_family": "Yes" if requestee.doctor_family else "No",
+            "patient_family": "Yes" if requestee.patient_family else "No",
+            "recommendation_made": "Yes" if requestee.recommendation_made else "No"
+        }
+
+        left_requestee_list.append(requestee_info)
+
+    left_requestee_df = pd.DataFrame(left_requestee_list)
+    left_requestee_df.sort_values(["doctor_family", "patient_family", "timestamp"])
+
+    if log_file:
+        file_path = _compute_export_file_path('unassigned_requestee.csv', settings.DATA_OUTPUT_DIR)
+        left_requestee_df.to_csv(file_path, index=False)
+
+    return left_requestee_df
 
 
 def _compute_export_file_path(file_name: str, dir_path: str) -> str:

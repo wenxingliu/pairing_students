@@ -17,6 +17,7 @@ class Volunteer:
         self.num_pairs = self.volunteer_info.get('num_pairs', 1)
         self.timezone = self.volunteer_info.get('timezone')
         self.organization = self.volunteer_info.get('organization')
+        self.scarcity_index = self.volunteer_info.get('scarcity_index')
         self._time_slots_utc = None
         self._time_slots_china = None
         self._paired_student = []
@@ -28,7 +29,7 @@ class Volunteer:
         return self._paired_student
 
     @property
-    def recommendation_filled(self):
+    def recommendation_made(self):
         return self.available and (len(self.potential_match) > 0)
 
     @property

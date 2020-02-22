@@ -7,8 +7,10 @@ from services.utils.common import (dedup_dataframe,
                                    convert_bool_to_int,
                                    cleanup_gender,
                                    get_digits)
-from services.utils.requestee import cleanup_utc_time_slots_requestee, compute_scarcity_index
-from services.utils.volunteer import compute_available_time_slots_volunteer
+from services.utils.requestee import (cleanup_utc_time_slots_requestee,
+                                      compute_request_scarcity_index)
+from services.utils.volunteer import (compute_available_time_slots_volunteer,
+                                      compute_volunteer_scarcity_index)
 from services.utils.timezone_conversion import compute_timezone_utc_offset_dict
 
 
@@ -33,7 +35,7 @@ def read_and_clean_requests(xlsx_file_path_list: List[str], sheet_name: str) -> 
         axis=1
     )
 
-    request_df = compute_scarcity_index(request_df)
+    request_df = compute_request_scarcity_index(request_df)
 
     return request_df
 
@@ -65,6 +67,8 @@ def read_and_clean_volunteers(xlsx_file_path_list: List[str], sheet_name: str) -
     common_cols = list(set(required_cols).intersection(volunteer_df.columns))
     volunteer_df = volunteer_df[common_cols]
 
+    volunteer_df = compute_volunteer_scarcity_index(volunteer_df)
+
     return volunteer_df
 
 
@@ -86,7 +90,7 @@ def _combine_multiple_pairing_csv_files(csv_file_path_list: List[str]) -> pd.Dat
     df_list = []
 
     for csv_file_path in csv_file_path_list:
-        sub_df = pd.read_csv(f'{settings.PAIRING_OUTPUT_DIR}/{csv_file_path}')
+        sub_df = pd.read_csv(f'{settings.PAIRING_OUTPUT_DIR}/{csv_file_path}.csv')
         df_list.append(sub_df)
 
     combined_df = pd.concat(df_list, axis=0)
@@ -99,7 +103,7 @@ def _combine_multiple_xlsx_files(xlsx_file_path_list: List[str],
     df_list = []
 
     for xlsx_file_path in xlsx_file_path_list:
-        sub_df = pd.read_excel(f'{settings.DATA_INPUT_DIR}/{xlsx_file_path}', sheet_name=sheet_name)
+        sub_df = pd.read_excel(f'{settings.DATA_INPUT_DIR}/{xlsx_file_path}.xlsx', sheet_name=sheet_name)
         df_list.append(sub_df)
 
     combined_df = pd.concat(df_list, axis=0)

@@ -72,25 +72,20 @@ def compute_time_part_from_str(time_str: str) -> dt.datetime:
     return time_part
 
 
-# def _concat_time_slots(time_slot_list: List[TimeSlot]) -> List[TimeSlot]:
-#     """If gap less than 30 min, concat"""
-#     THRESHOLD = 30
-#
-#     list_len = len(time_slot_list)
-#
-#     if list_len <= 1:
-#         return time_slot_list
-#
-#     output_list = [time_slot_list[0]]
-#
-#     for i in range(list_len - 1):
-#         prev_time_slot = output_list[-1]
-#         latter_time_slot = time_slot_list[i + 1]
-#
-#         if prev_time_slot.adjacent(latter_time_slot, threshold_min=THRESHOLD):
-#             new_time_slot = TimeSlot(start=prev_time_slot.start, end=latter_time_slot.end)
-#             output_list[-1] = new_time_slot
-#         else:
-#             output_list.append(latter_time_slot)
-#
-#     return output_list
+def assign_scarcity_metrics_to_person_and_time_slot(time_slot_list,
+                                                    scarcity_dict,
+                                                    class_type='') -> int:
+    """Compute how rare the request is, the lower the number is, the rarer the requested slot is"""
+    scarcity_index_list = []
+    for time_slot in time_slot_list:
+        scarcity_index = scarcity_dict[time_slot]
+        time_slot.scarcity_index = scarcity_index
+        scarcity_index_list.append(scarcity_index)
+
+    if scarcity_index_list:
+        if class_type == 'volunteer':
+            return min(scarcity_index_list)
+        else:
+            return max(scarcity_index_list)
+    else:
+        return 0

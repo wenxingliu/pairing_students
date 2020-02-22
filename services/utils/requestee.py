@@ -6,7 +6,9 @@ import pandas as pd
 
 from models.requestee import Requestee
 from models.time_slot import TimeSlot, TimeSlotList
-from services.utils.common import cleanup_time_slot_day, compute_time_part_from_str
+from services.utils.common import (cleanup_time_slot_day,
+                                   compute_time_part_from_str,
+                                   assign_scarcity_metrics_to_person_and_time_slot)
 
 
 def cleanup_utc_time_slots_requestee(time_str: str, day_int: str) -> TimeSlotList:
@@ -40,10 +42,10 @@ def _cleanup_time_slot_str_requestee(time_slot_str: str, day_int: int) -> TimeSl
     return time_slot
 
 
-def compute_scarcity_index(request_df: pd.DataFrame) -> pd.DataFrame:
+def compute_request_scarcity_index(request_df: pd.DataFrame) -> pd.DataFrame:
     scarcity_dict = _compute_request_scarcity(request_df)
     request_df['scarcity_index'] = request_df.time_slots_china.apply(
-        lambda x: _assign_scarcity_metrics_to_requestee(x, scarcity_dict))
+        lambda x: assign_scarcity_metrics_to_person_and_time_slot(x, scarcity_dict))
     return request_df
 
 
@@ -53,20 +55,11 @@ def _compute_request_scarcity(request_df: pd.DataFrame) -> dict:
     return scarcity_dict
 
 
-def _assign_scarcity_metrics_to_requestee(time_slot_list, scarcity_dict) -> int:
-    """Compute how rare the request is, the lower the number is, the rarer the requested slot is"""
-    scarcity_index_list = []
-    for time_slot in time_slot_list:
-        scarcity_index = scarcity_dict[time_slot]
-        time_slot.scarcity_index = scarcity_index
-        scarcity_index_list.append(scarcity_index)
-    return max(scarcity_index_list)
-
-
 def compute_requestees(requestee_df: pd.DataFrame) -> List[Requestee]:
     requestees = []
 
-    for requestee_info in requestee_df.T.to_dict().values():
+    for data_row in requestee_df.iterrows():
+        requestee_info = data_row[1]
         requestee = Requestee(requestee_info)
         requestees.append(requestee)
 
