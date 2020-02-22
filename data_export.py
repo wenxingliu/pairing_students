@@ -4,8 +4,7 @@ from typing import List
 
 from models.requestee import Requestee
 from models.volunteer import Volunteer
-
-DATA_OUTPUT_DIR = 'data/outputs/'
+import settings as settings
 
 
 def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
@@ -14,6 +13,12 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
         if requestee.assigned:
             volunteer = requestee.volunteer
             promised_time_slot = requestee.promised_time_slot
+
+            if volunteer.email_sent:
+                email_sent_time_str = volunteer.email_sent_time_utc.strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                email_sent_time_str = settings.DUMMY_MONDAY_DATE
+
             paired_info = {
                 "requestee": requestee.name,
                 "requestee_wechat": requestee.parent_wechat,
@@ -24,18 +29,16 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
                 "slot_start_time": str(promised_time_slot.start),
                 "slot_end_time": str(promised_time_slot.end),
                 "weekday": promised_time_slot.weekday,
-                "volunteer_email_sent": str(requestee.volunteer.email_sent)
+                "volunteer_email_sent": str(requestee.volunteer.email_sent),
+                "email_sent_time_utc": email_sent_time_str
             }
-
-            if requestee.volunteer.email_sent:
-                paired_info["email_sent_time_utc"] = requestee.volunteer.email_sent_time_utc.strftime("%Y-%m-%d %H:%M:%S")
 
             paired_list.append(paired_info)
     paired_df = pd.DataFrame(paired_list)
     paired_df.sort_values(["volunteer_wechat", "promised_time_slot"])
 
     if log_file:
-        file_path = _compute_export_file_path('paired.csv')
+        file_path = _compute_export_file_path('paired.csv', settings.PAIRING_OUTPUT_DIR)
         paired_df.to_csv(file_path, index=False)
 
     return paired_df
@@ -59,7 +62,7 @@ def compute_volunteers_to_be_paired(volunteers: List[Volunteer], log_file: bool 
     to_be_paired_volunteers_df = pd.DataFrame(to_be_paired_volunteers_list)
 
     if log_file:
-        file_path = _compute_export_file_path('unassigned_volunteers.csv')
+        file_path = _compute_export_file_path('unassigned_volunteers.csv', settings.DATA_OUTPUT_DIR)
         to_be_paired_volunteers_df.to_csv(file_path, index=False)
 
     return to_be_paired_volunteers_df
@@ -87,13 +90,13 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
     recommendation_df = pd.DataFrame(recommendation_list)
 
     if log_file:
-        file_path = _compute_export_file_path('recommendations.csv')
+        file_path = _compute_export_file_path('recommendations.csv', settings.DATA_OUTPUT_DIR)
         recommendation_df.to_csv(file_path, index=False)
 
     return recommendation_df
 
 
-def _compute_export_file_path(file_name: str) -> str:
-    dt_str = dt.datetime.utcnow().strftime("%Y%m%d_%H%M")
-    file_path = f"{DATA_OUTPUT_DIR}/{dt_str}_{file_name}"
+def _compute_export_file_path(file_name: str, dir_path: str) -> str:
+    dt_str = dt.datetime.utcnow().strftime("%Y%m%d%H%M")
+    file_path = f"{dir_path}/{dt_str}_{file_name}"
     return file_path

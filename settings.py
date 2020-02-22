@@ -58,3 +58,7 @@ PRIORITY_RULES = ["doctor_family", "patient_family"]
 
 MATCHING_CRITERIA_HARD = ["volunteer_gender", "time_slot_time"]
 MATCHING_CRITERIA_SOFT = ["age"]
+
+DATA_OUTPUT_DIR = 'data/outputs/'
+PAIRING_OUTPUT_DIR = 'data/pairing_output/'
+DATA_INPUT_DIR = 'data/input/'
