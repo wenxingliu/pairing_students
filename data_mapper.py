@@ -1,4 +1,5 @@
 import pandas as pd
+from typing import List
 
 import settings as settings
 from services.utils.common import dedup_dataframe, convert_bool_to_int, cleanup_gender, get_digits
@@ -6,9 +7,12 @@ from services.utils.requestee import cleanup_utc_time_slots_requestee, compute_s
 from services.utils.volunteer import compute_available_time_slots_volunteer
 from services.utils.timezone_conversion import compute_timezone_utc_offset_dict
 
+DATA_INPUT_DIR = 'data/input/'
 
-def read_and_clean_requests(xlsx_file_path: str, sheet_name: str) -> pd.DataFrame:
-    request_df = pd.read_excel(xlsx_file_path, sheet_name=sheet_name)
+
+def read_and_clean_requests(xlsx_file_path_list: List[str], sheet_name: str) -> pd.DataFrame:
+    request_df = _combine_multiple_files(xlsx_file_path_list, sheet_name)
+
     request_df.rename(columns=settings.REQUEST_COLUMNS_MAPPER, inplace=True)
     request_df['timestamp'] = pd.to_datetime(request_df.timestamp)
 
@@ -32,8 +36,9 @@ def read_and_clean_requests(xlsx_file_path: str, sheet_name: str) -> pd.DataFram
     return request_df
 
 
-def read_and_clean_volunteers(xlsx_file_path: str, sheet_name: str) -> pd.DataFrame:
-    volunteer_df = pd.read_excel(xlsx_file_path, sheet_name=sheet_name)
+def read_and_clean_volunteers(xlsx_file_path_list: List[str], sheet_name: str) -> pd.DataFrame:
+    volunteer_df = _combine_multiple_files(xlsx_file_path_list, sheet_name)
+
     volunteer_df.columns = [col.replace("'", "") for col in volunteer_df.columns]
     volunteer_df.rename(columns=settings.VOLUNTEER_COLUMNS_MAPPER, inplace=True)
 
@@ -59,3 +64,16 @@ def read_and_clean_volunteers(xlsx_file_path: str, sheet_name: str) -> pd.DataFr
     volunteer_df = volunteer_df[common_cols]
 
     return volunteer_df
+
+
+def _combine_multiple_files(xlsx_file_path_list: List[str],
+                            sheet_name: str) -> pd.DataFrame:
+    df_list = []
+
+    for xlsx_file_path in xlsx_file_path_list:
+        sub_df = pd.read_excel(f'{DATA_INPUT_DIR}/{xlsx_file_path}', sheet_name=sheet_name)
+        df_list.append(sub_df)
+
+    combined_df = pd.concat(df_list, axis=0)
+
+    return combined_df

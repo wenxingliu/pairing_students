@@ -1,3 +1,4 @@
+from typing import List
 from data_export import (compute_paired_data,
                          compute_volunteers_to_be_paired,
                          compute_volunteers_recommendations)
@@ -8,19 +9,18 @@ from services.recommendation import make_recommendations_for_all_unassigned_volu
 from services.utils.requestee import compute_requestees
 from services.utils.volunteer import compute_volunteers
 
-DATA_INPUT_DIR = 'data/input/'
 DATA_OUTPUT_DIR = 'data/outputs/'
 
 
-def main(request_file_path: str,
-         volunteer_file_path: str,
+def main(request_file_path_list: List[str],
+         volunteer_file_path_list: List[str],
          send_out_email: bool = False,
          log_results: bool = True):
-    requestee_df = read_and_clean_requests(xlsx_file_path=f'{DATA_INPUT_DIR}/{request_file_path}',
+    requestee_df = read_and_clean_requests(xlsx_file_path_list=request_file_path_list,
                                            sheet_name='学生信息收集表')
     requestee_df = requestee_df.loc[requestee_df.doctor_family == 1]
 
-    volunteer_df = read_and_clean_volunteers(xlsx_file_path=f'{DATA_INPUT_DIR}/{volunteer_file_path}',
+    volunteer_df = read_and_clean_volunteers(xlsx_file_path_list=volunteer_file_path_list,
                                              sheet_name='Form Responses 1')
 
     requestees = compute_requestees(requestee_df)
@@ -45,8 +45,8 @@ def main(request_file_path: str,
 
 
 if __name__ == '__main__':
-    main(volunteer_file_path='1 to 1 English teaching_mock.xlsx',
-         request_file_path='request_02192020.xlsx',
-         send_out_email=True,
+    main(volunteer_file_path_list=['1 to 1 English teaching_mock.xlsx'],
+         request_file_path_list=['request_cov19_02192020.xlsx', 'requests_yan_an.xlsx'],
+         send_out_email=False,
          log_results=True)
     print('breakpoint')
