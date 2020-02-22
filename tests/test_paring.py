@@ -23,6 +23,3 @@ def test_paring():
 
     assert len(target_volunteer.paired_student) == 1
     assert target_volunteer.paired_student[0].name == 'test_requestee5'
-
-
-test_paring()

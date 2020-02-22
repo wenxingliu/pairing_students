@@ -12,3 +12,7 @@ data/*
 utils/__pycache__/*
 models/__pycache__/*
 config/__pycache__/*
+.pytest_cache/*
+tests/.pytest_cache/*
+
+config/app_env.py

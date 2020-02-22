@@ -5,17 +5,18 @@ from email.mime.text import MIMEText
 from email.utils import formatdate
 from email import encoders
 
+from config import app_env
+
 
 def send_email(subject,
                text,
                send_to,
-               send_from,
-               username,
-               password,
+               send_from=app_env.GMAIL_ACCOUNT,
+               username=app_env.GMAIL_ACCOUNT,
+               password=app_env.GMAIL_PASSWORD,
                file=None,
                server="smtp.gmail.com",
-               port=587,
-               isTls=True):
+               port=587):
     try:
         msg = MIMEMultipart()
         msg['From'] = send_from
@@ -31,12 +32,11 @@ def send_email(subject,
             part.add_header('Content-Disposition', 'attachment; filename="%s"' % file)
             msg.attach(part)
 
-        smtp = smtplib.SMTP(server, port)
-        if isTls:
-            smtp.starttls()
-        smtp.login(username, password)
-        smtp.sendmail(send_from, send_to, msg.as_string())
-        smtp.quit()
+        session = smtplib.SMTP(server, port)
+        session.starttls()
+        session.login(username, password)
+        session.sendmail(send_from, send_to, msg.as_string())
+        session.quit()
         print('successfully sent the email')
     except:
         print("failed to send email")
