@@ -14,7 +14,7 @@ def pair_for_all(all_requestees: List[Requestee], all_volunteers: List[Volunteer
 
 def find_pair(requestee: Requestee, all_volunteers: List[Volunteer]):
 
-    matched_volunteer = None
+    # matched_volunteer = None
 
     for volunteer in all_volunteers:
 
@@ -34,5 +34,5 @@ def find_pair(requestee: Requestee, all_volunteers: List[Volunteer]):
             requestee.assign(matched_volunteer, promised_time)
             break
 
-    if matched_volunteer is None:
-        print(f'no match for {requestee}')
+    # if matched_volunteer is None:
+    #     print(f'no match for {requestee}')

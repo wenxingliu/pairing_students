@@ -31,7 +31,8 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
                 "slot_end_time": promised_time_slot.end.strftime("%H:%M"),
                 "weekday": promised_time_slot.weekday,
                 "volunteer_email_sent": str(requestee.volunteer.email_sent),
-                "email_sent_time_utc": email_sent_time_str
+                "email_sent_time_utc": email_sent_time_str,
+                "other_wechat_info": requestee.other_wechat_info
             }
 
             paired_list.append(paired_info)
@@ -122,7 +123,8 @@ def compute_unassgined_requestee(requestees: List[Requestee], log_file: bool = T
             "english_learning_in_years": requestee.requestee_info.get('english_learning_in_years'),
             "doctor_family": "Yes" if requestee.doctor_family else "No",
             "patient_family": "Yes" if requestee.patient_family else "No",
-            "recommendation_made": "Yes" if requestee.recommendation_made else "No"
+            "recommendation_made": "Yes" if requestee.recommendation_made else "No",
+            "other_wechat_info": requestee.other_wechat_info
         }
 
         left_requestee_list.append(requestee_info)

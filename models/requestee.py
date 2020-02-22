@@ -6,10 +6,11 @@ class Requestee:
         self.age = self.requestee_info.get('age')
         self.gender = self.requestee_info.get('gender')
         self.parent_wechat = self.requestee_info.get('parent_wechat')
-        self.doctor_family = self.requestee_info.get('doctor_family')
-        self.patient_family = self.requestee_info.get('patient_family')
+        self.other_wechat_info = self.requestee_info.get('other_wechat_info')
+        self.doctor_family = self.requestee_info.get('doctor_family', 0)
+        self.patient_family = self.requestee_info.get('patient_family', 0)
         self.volunteer_gender = self.requestee_info.get('volunteer_gender')
-        self.scarcity_index = self.requestee_info.get('scarcity_index')
+        self.scarcity_index = self.requestee_info.get('scarcity_index', 0)
         self.time_slots_china = sorted(self.requestee_info.get('time_slots_china'))
         self._volunteer = None
         self._promised_time_slot = None
@@ -53,7 +54,8 @@ class Requestee:
             time_str = f"Tentative Time (Beijing Time): {self.promised_time_slot}"
         else:
             time_str = f"Preferred Time (Beijing Time): {self.time_slots_local}"
-        return f"""
+
+        formatted_text = f"""
         Name: {self.name.title()}
         {time_str} 
         Age: {self.requestee_info.get('age_raw')}
@@ -64,6 +66,14 @@ class Requestee:
         Doctor Family: {"Yes" if self.doctor_family else "No"}
         COVID-19 Patient Family: {"Yes" if self.patient_family else "No"}\n
         """
+
+        if self.other_wechat_info:
+            formatted_text += f"""
+            Our data suggests there are more than one wechat accounts on file:
+            {self.other_wechat_info}
+            """
+
+        return formatted_text
 
     def __str__(self):
         return f"{self.name} request {self.volunteer_gender}"

@@ -30,7 +30,7 @@ VOLUNTEER_COLUMNS_MAPPER = {
 
 
 REQUESTEE_UNIQUE_COLS = ["parent_wechat"]
-VOLUNTEER_UNIQUE_COLS = ["parent_wechat"]
+VOLUNTEER_UNIQUE_COLS = ["organization", "parent_wechat", "volunteer_email"]
 PAIRING_UNIQUE_COLS = ["requestee_wechat", "volunteer_wechat"]
 
 

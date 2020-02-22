@@ -63,7 +63,7 @@ def main(request_file_path_list: List[str],
 
 
 if __name__ == '__main__':
-    df_list = main(volunteer_file_path_list=[],
+    df_list = main(volunteer_file_path_list=['Registration for Volunteers  (Responses)'],
                    request_file_path_list=['request_cov19_02192020', 'requests_yan_an'],
                    previously_paired_file_path_list=None,
                    send_email=False,

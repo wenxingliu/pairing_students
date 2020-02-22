@@ -14,13 +14,19 @@ from services.utils.volunteer import (compute_available_time_slots_volunteer,
 from services.utils.timezone_conversion import compute_timezone_utc_offset_dict
 
 
-def read_and_clean_requests(xlsx_file_path_list: List[str], sheet_name: str) -> pd.DataFrame:
-    request_df = _combine_multiple_xlsx_files(xlsx_file_path_list, sheet_name)
+def read_and_clean_requests(xlsx_file_path_list: List[str],
+                            sheet_name: str,
+                            data_dir: str = settings.DATA_INPUT_DIR) -> pd.DataFrame:
+    request_df = _combine_multiple_xlsx_files(xlsx_file_path_list, sheet_name, data_dir)
+
+    print(f"Number of raw request records: {len(request_df)}")
 
     request_df.rename(columns=settings.REQUEST_COLUMNS_MAPPER, inplace=True)
     request_df['timestamp'] = pd.to_datetime(request_df.timestamp)
 
-    request_df = dedup_dataframe(request_df, settings.REQUESTEE_UNIQUE_COLS)
+    request_df = dedup_dataframe(df=request_df,
+                                 first_dedup_cols=settings.REQUESTEE_UNIQUE_COLS,
+                                 dedup_wechat_cols=['requestee'])
 
     request_df['doctor_family'] = request_df.doctor_family.apply(convert_bool_to_int)
     request_df['patient_family'] = request_df.patient_family.apply(convert_bool_to_int)
@@ -37,18 +43,26 @@ def read_and_clean_requests(xlsx_file_path_list: List[str], sheet_name: str) -> 
 
     request_df = compute_request_scarcity_index(request_df)
 
+    print(f"Number of unique requests: {len(request_df)}")
+
     return request_df
 
 
-def read_and_clean_volunteers(xlsx_file_path_list: List[str], sheet_name: str) -> pd.DataFrame:
-    volunteer_df = _combine_multiple_xlsx_files(xlsx_file_path_list, sheet_name)
+def read_and_clean_volunteers(xlsx_file_path_list: List[str],
+                              sheet_name: str,
+                              data_dir: str = settings.DATA_INPUT_DIR) -> pd.DataFrame:
+    volunteer_df = _combine_multiple_xlsx_files(xlsx_file_path_list, sheet_name, data_dir)
+
+    print(f"Number of raw volunteer records: {len(volunteer_df)}")
 
     volunteer_df.columns = [col.replace("'", "") for col in volunteer_df.columns]
     volunteer_df.rename(columns=settings.VOLUNTEER_COLUMNS_MAPPER, inplace=True)
 
     volunteer_df = volunteer_df.loc[pd.notnull(volunteer_df.name)]
 
-    volunteer_df = dedup_dataframe(volunteer_df, settings.VOLUNTEER_UNIQUE_COLS)
+    volunteer_df = dedup_dataframe(df=volunteer_df,
+                                   first_dedup_cols=settings.VOLUNTEER_UNIQUE_COLS,
+                                   dedup_wechat_cols=['name', 'volunteer_email', 'parent_email'])
 
     volunteer_df['timestamp'] = pd.to_datetime(volunteer_df.timestamp)
 
@@ -63,11 +77,9 @@ def read_and_clean_volunteers(xlsx_file_path_list: List[str], sheet_name: str) -
     volunteer_df.num_pairs.fillna(1, inplace=True)
     volunteer_df.fillna("", inplace=True)
 
-    required_cols = list(settings.VOLUNTEER_COLUMNS_MAPPER.values()) + ['utc_offset', 'time_slots_local']
-    common_cols = list(set(required_cols).intersection(volunteer_df.columns))
-    volunteer_df = volunteer_df[common_cols]
-
     volunteer_df = compute_volunteer_scarcity_index(volunteer_df)
+
+    print(f"Number of unique volunteers: {len(volunteer_df)}")
 
     return volunteer_df
 
@@ -91,6 +103,7 @@ def _combine_multiple_pairing_csv_files(csv_file_path_list: List[str]) -> pd.Dat
 
     for csv_file_path in csv_file_path_list:
         sub_df = pd.read_csv(f'{settings.PAIRING_OUTPUT_DIR}/{csv_file_path}.csv')
+        sub_df['file_group'] = csv_file_path
         df_list.append(sub_df)
 
     combined_df = pd.concat(df_list, axis=0)
@@ -99,11 +112,13 @@ def _combine_multiple_pairing_csv_files(csv_file_path_list: List[str]) -> pd.Dat
 
 
 def _combine_multiple_xlsx_files(xlsx_file_path_list: List[str],
-                                 sheet_name: str) -> pd.DataFrame:
+                                 sheet_name: str,
+                                 data_dir: str) -> pd.DataFrame:
     df_list = []
 
     for xlsx_file_path in xlsx_file_path_list:
-        sub_df = pd.read_excel(f'{settings.DATA_INPUT_DIR}/{xlsx_file_path}.xlsx', sheet_name=sheet_name)
+        sub_df = pd.read_excel(f'{data_dir}/{xlsx_file_path}.xlsx', sheet_name=sheet_name)
+        sub_df['file_group'] = xlsx_file_path
         df_list.append(sub_df)
 
     combined_df = pd.concat(df_list, axis=0)

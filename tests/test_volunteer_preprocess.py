@@ -2,8 +2,9 @@ import datetime as dt
 from data_mapper import read_and_clean_volunteers
 from models.time_slot import TimeSlot, TimeSlotList
 
-VOLUNTEER_DF = read_and_clean_volunteers(xlsx_file_path='tests/mock_data/volunteer.xlsx',
-                                         sheet_name='Form Responses 1')
+VOLUNTEER_DF = read_and_clean_volunteers(xlsx_file_path_list=['volunteer'],
+                                         sheet_name='Sheet1',
+                                         data_dir='tests/mock_data')
 
 
 def test_volunteer_data_deduplicate():

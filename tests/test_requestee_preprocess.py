@@ -2,8 +2,9 @@ import datetime as dt
 from data_mapper import read_and_clean_requests
 from models.time_slot import TimeSlot, TimeSlotList
 
-REQUEST_DF = read_and_clean_requests(xlsx_file_path='tests/mock_data/requestee.xlsx',
-                                     sheet_name='学生信息收集表')
+REQUEST_DF = read_and_clean_requests(xlsx_file_path_list=['requestee'],
+                                     sheet_name='Sheet1',
+                                     data_dir='tests/mock_data')
 
 
 def test_requestee_data_deduplicate():

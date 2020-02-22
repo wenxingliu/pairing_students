@@ -1,16 +1,59 @@
 import datetime as dt
 import pandas as pd
-from typing import List
+from typing import List, Union
 
 import settings as settings
 
 
-def dedup_dataframe(df: pd.DataFrame, idx_cols: List[str]) -> pd.DataFrame:
-    df.sort_values('timestamp', inplace=True)
-    for col in idx_cols:
-        df[col] = df[col].apply(lambda x: str(x).lower())
-    df.drop_duplicates(idx_cols, keep='last', inplace=True)
+def dedup_dataframe(df: pd.DataFrame,
+                    first_dedup_cols: List[str],
+                    dedup_wechat_cols: List[str] = None) -> pd.DataFrame:
+    """
+    first dedup by wechat account, take the last one;
+    then dedup based on name, take the last one and compile other wechat info
+    """
+    df = _dedup_based_on_selected_subset(df, first_dedup_cols)
+
+    if dedup_wechat_cols:
+        df = _combine_mutliple_wechat_entries(df, dedup_wechat_cols)
+
     return df
+
+
+def _combine_mutliple_wechat_entries(df: pd.DataFrame, cols: List[str]) -> pd.DataFrame:
+
+    # compile wechat info
+    gp_df = df.groupby(cols).parent_wechat.apply(_backup_wechat_information).reset_index()
+    gp_df.rename(columns={"parent_wechat": "other_wechat_info"}, inplace=True)
+
+    # dedup based on selected column
+    dedup_df = _dedup_based_on_selected_subset(df, cols)
+
+    # join back to get all info
+    joined_df = dedup_df.merge(gp_df, how='left', on=cols)
+
+    return joined_df
+
+
+def _dedup_based_on_selected_subset(df: pd.DataFrame, cols: List[str]) -> pd.DataFrame:
+    """
+    sort by time, and take the latest record
+    """
+    df = df.sort_values('timestamp')
+
+    for col in cols:
+        df[col] = df[col].apply(lambda x: str(x).lower())
+
+    dedup_df = df.drop_duplicates(cols, keep='last')
+
+    return dedup_df
+
+
+def _backup_wechat_information(wechat_lst) -> Union[None, str]:
+    if len(wechat_lst) > 1:
+        return ' ,'.join(wechat_lst)
+    else:
+        return None
 
 
 def convert_bool_to_int(str_val: str) -> int:
