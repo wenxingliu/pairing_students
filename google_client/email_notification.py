@@ -12,13 +12,12 @@ from models.volunteer import Volunteer
 
 def email_to_all_volunteers(all_volunteers: List[Volunteer]):
     for volunteer in all_volunteers:
-        if volunteer.paired_student or volunteer.recommendation_filled:
-            try:
-                send_email_to_volunteer(volunteer)
-                print(f'successfully sent email to {volunteer.name}')
-            except:
-                print(f'failed to send email to {volunteer.name} at \
-                {volunteer.parent_email} or {volunteer.volunteer_email}')
+        try:
+            send_email_to_volunteer(volunteer)
+            print(f'successfully sent email to {volunteer.name}')
+        except:
+            print(f'failed to send email to {volunteer.name} at \
+            {volunteer.parent_email} or {volunteer.volunteer_email}')
 
 
 def send_email_to_volunteer(volunteer: Volunteer):
@@ -105,11 +104,18 @@ def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
     The converted Beijing time are:
     
     {volunteer.time_slots_china}
-    
-    Here are some potential match, please consider resubmit your time accordingly to get a match:
-
-    {student_info}
     """
+
+    if student_info:
+        body_text += f"""
+        Here are some potential match, please consider resubmit your time accordingly to get a successful match:
+    
+        {student_info}
+        """
+    else:
+        body_text += """
+        Please consider resubmit your time accordingly to get a successful match.
+        """
 
     return body_text
 
