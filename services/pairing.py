@@ -14,11 +14,11 @@ def pair_for_all(all_requestees: List[Requestee], all_volunteers: List[Volunteer
 
 def find_pair(requestee: Requestee, all_volunteers: List[Volunteer]):
 
-    # matched_volunteer = None
-
     for volunteer in all_volunteers:
 
         if not volunteer.available:
+            continue
+        if not volunteer.has_valid_email:
             continue
         if volunteer.gender != requestee.volunteer_gender:
             continue

@@ -1,6 +1,7 @@
 import datetime as dt
 from typing import List
 from models.time_slot import TimeSlot, local_time_slot_to_utc, utc_time_slot_to_china_tz
+from google_client.invalid_emails import valid_email_address
 
 import settings
 
@@ -70,6 +71,10 @@ class Volunteer:
     @property
     def email_sent(self) -> bool:
         return self.email_sent_time_utc is not None
+
+    @property
+    def has_valid_email(self) -> bool:
+        return valid_email_address(self.volunteer_email) or valid_email_address(self.parent_email)
 
     def overlapping_china_time_slots(self, time_slots_china: List[TimeSlot]) -> List[TimeSlot]:
         overlaps = list(set(time_slots_china).intersection(self.time_slots_china))

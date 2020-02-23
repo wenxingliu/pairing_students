@@ -1,3 +1,4 @@
+from google_client.invalid_emails import valid_email_address
 from models.volunteer import Volunteer
 
 
@@ -116,5 +117,3 @@ def time_slot_list_to_str_formatting(time_slot_list) -> str:
     return '\n'.join(time_slot_str_list)
 
 
-def valid_email_address(email_address: str) -> bool:
-    return '@' in str(email_address)

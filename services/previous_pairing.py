@@ -21,12 +21,15 @@ def reflect_all_previously_paired_results(all_requestees: List[Requestee],
         previously_paired_volunteer = volunteer_by_email_dict.get(paired_info.volunteer_email)
 
         if (previously_paired_request is not None
-                and previously_paired_volunteer is not None):
+                and previously_paired_volunteer is not None
+                and previously_paired_volunteer.has_valid_email):
             reflect_previously_paired_result_of_requestee(
                 paired_info=paired_info,
                 previously_paired_requestee=previously_paired_request,
                 previously_paired_volunteer=previously_paired_volunteer
             )
+        elif not previously_paired_volunteer.has_valid_email:
+            print(f"Invalid email on pairing: {previously_paired_volunteer}")
         else:
             print(f"Invalid paring: {paired_info}")
 

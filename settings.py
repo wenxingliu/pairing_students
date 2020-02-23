@@ -79,3 +79,4 @@ DATA_OUTPUT_DIR = 'data/outputs/'
 PAIRING_OUTPUT_DIR = 'data/pairing_output/'
 DATA_INPUT_DIR = 'data/input/'
 OTHER_GROUP_IMG_PATH = f"{DATA_INPUT_DIR}/Org_Other_Wechat.jpeg"
+INVALID_EMAIL_LIST_PATH = f"{DATA_INPUT_DIR}/invalid_email_list.csv"
