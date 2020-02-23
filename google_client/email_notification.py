@@ -63,18 +63,27 @@ def send_email_to_volunteer(volunteer: Volunteer):
 def notification_email_to_all_volunteers(subject: str,
                                          email_text_file: str,
                                          volunteers: List[Volunteer],
-                                         file: str = None):
+                                         others_org_only: bool):
     with open(f'{settings.DATA_INPUT_DIR}/{email_text_file}', 'r') as myfile:
         email_text = myfile.read()
 
     for volunteer in volunteers:
+
+        if others_org_only and (not volunteer.no_org):
+            continue
+        elif others_org_only:
+            # If volunteer does not belong to any registered group, send barcode
+            image_file = settings.OTHER_GROUP_IMG_PATH if volunteer.no_org else None
+        else:
+            image_file = None
+
         try:
             send_to = utils.compute_receiver(volunteer)
             if send_to:
                 send_email(subject=subject,
                            text=email_text,
                            send_to=send_to,
-                           file=file)
+                           file=image_file)
             else:
                 print(f"{volunteer} has no valid email address")
         except:
