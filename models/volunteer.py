@@ -27,7 +27,7 @@ class Volunteer:
 
     @property
     def no_org(self) -> bool:
-        return str(self.organization) not in settings.REGISTERED_ORGANIZATIONS
+        return str(self.organization).lower() not in settings.REGISTERED_ORGANIZATIONS
 
     @property
     def paired_student(self):
