@@ -189,13 +189,17 @@ def compute_no_organization_volunteers(volunteers: List[Volunteer], log_file: bo
             no_org_list.append(volunteer_info)
 
     no_org_df = pd.DataFrame(no_org_list)
-    no_org_df.sort_values(['Organization', 'Volunteer'], inplace=True)
 
-    if log_file:
-        file_path = _compute_export_file_path('no_org_volunteers.csv', settings.DATA_OUTPUT_DIR)
-        no_org_df.to_csv(file_path, index=False)
+    if no_org_df.empty:
+        print("No no_org")
+    else:
+        no_org_df.sort_values(['Organization', 'Volunteer'], inplace=True)
 
-    return no_org_df
+        if log_file:
+            file_path = _compute_export_file_path('no_org_volunteers.csv', settings.DATA_OUTPUT_DIR)
+            no_org_df.to_csv(file_path, index=False)
+
+        return no_org_df
 
 
 def _compute_export_file_path(file_name: str, dir_path: str) -> str:

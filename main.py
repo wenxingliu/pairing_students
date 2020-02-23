@@ -57,19 +57,36 @@ def main(request_file_path_list: List[str],
     except:
         print("Error when sending emails")
 
-    paired_df = compute_paired_data(requestees, log_file)
-    recommendation_df = compute_volunteers_recommendations(volunteers, log_file)
-    unassigned_volunteers_df = compute_unassigned_volunteers(volunteers, log_file)
-    unassigned_requestee_df = compute_unassgined_requestee(requestees, log_file)
-    no_org_volunteers = compute_no_organization_volunteers(volunteers, log_file)
+    try:
+        paired_df = compute_paired_data(requestees, log_file)
+    except:
+        print(f"failed to generate paired_df")
 
-    return [paired_df, recommendation_df, unassigned_volunteers_df, unassigned_requestee_df, no_org_volunteers]
+    try:
+        recommendation_df = compute_volunteers_recommendations(volunteers, log_file)
+    except:
+        print(f"failed to generate recommendation_df")
+
+    try:
+        unassigned_volunteers_df = compute_unassigned_volunteers(volunteers, log_file)
+    except:
+        print(f"failed to generate unassigned_volunteers_df")
+
+    try:
+        unassigned_requestee_df = compute_unassgined_requestee(requestees, log_file)
+    except:
+        print(f"failed to generate unassigned_requestee_df")
+
+    try:
+        no_org_volunteers = compute_no_organization_volunteers(volunteers, log_file)
+    except:
+        print(f"failed to generate no_org_volunteers")
 
 
 if __name__ == '__main__':
-    df_list = main(volunteer_file_path_list=['Registration for Volunteers  (Responses)'],
-                   request_file_path_list=['request_cov19_02192020', 'requests_yan_an'],
-                   previously_paired_file_path_list=None,
-                   send_email=False,
-                   log_file=True)
+    main(volunteer_file_path_list=['mock/volunteer_mock_2'],
+         request_file_path_list=['mock/requests_mock'],
+         previously_paired_file_path_list=['202002230337_paired'],
+         send_email=True,
+         log_file=True)
     print('breakpoint')
