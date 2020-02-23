@@ -53,11 +53,25 @@ class Requestee:
 
     @property
     def formatted_info(self) -> str:
+        # personal info string
+        if self.assigned:
+            PII_text = f"""
+        Name: {self.name.title()}
+        Age: {self.requestee_info.get('age_raw')}
+        Gender: {self.gender.title()}
+        Parent Wechat: {self.parent_wechat}
+        Doctor Family: {"Yes" if self.doctor_family else "No"}
+        COVID-19 Patient Family: {"Yes" if self.patient_family else "No"}"""
+        else:
+            PII_text = ""
+
+        # time string
         if self.assigned:
             time_str = f"Tentative Time (Beijing Time): {self.promised_time_slot}"
         else:
             time_str = f"Preferred Time (Beijing Time): {self.time_slots_local}"
 
+        # additional wechat info
         if pd.notnull(self.other_wechat_info):
             additional_wechat_info = f"""
         Our data suggests there are more than one wechat accounts of {self.name} on file: {self.other_wechat_info}
@@ -66,15 +80,10 @@ class Requestee:
             additional_wechat_info = ''
 
         formatted_text = f"""
-        Name: {self.name.title()}
+        {PII_text}
         {time_str} 
-        Age: {self.requestee_info.get('age_raw')}
-        Gender: {self.gender.title()}
-        Parent Wechat: {self.parent_wechat}
         English Learning (Years): {self.requestee_info.get('english_learning_in_years')}
         Preferred Content: {self.requestee_info.get('content')}
-        Doctor Family: {"Yes" if self.doctor_family else "No"}
-        COVID-19 Patient Family: {"Yes" if self.patient_family else "No"}
         {additional_wechat_info}"""
 
         return formatted_text

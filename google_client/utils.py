@@ -84,7 +84,7 @@ The converted Beijing time are:
 
     if student_info:
         body_text += f"""
-Although we were not able to find a best fit, there are some possible time slots , \
+Although we were not able to find a best fit, there are some possible time slots, \
 please consider resubmit your available time slots accordingly to help us get you a fit:
     {student_info}"""
     return body_text
