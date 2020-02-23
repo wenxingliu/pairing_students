@@ -5,13 +5,13 @@ from email.mime.text import MIMEText
 from email.utils import formatdate
 from email import encoders
 from typing import List
+from time import sleep
 
 from google_client import utils
 from secrets.private import GMAIL_ACCOUNT, GMAIL_PASSWORD
 from models.volunteer import Volunteer
 
 import settings
-from time import sleep
 
 
 def email_to_all_volunteers(all_volunteers: List[Volunteer]):
@@ -21,7 +21,6 @@ def email_to_all_volunteers(all_volunteers: List[Volunteer]):
                 print(f'Email already sent to {volunteer} at {volunteer.email_sent_time_utc}')
             else:
                 send_email_to_volunteer(volunteer)
-                volunteer.mark_email_sent()
                 print(f'successfully sent email to {volunteer.name}')
         except:
             print(f'failed to send email to {volunteer.name} at \
@@ -56,8 +55,30 @@ def send_email_to_volunteer(volunteer: Volunteer):
 
         send_email(subject=subject, text=text, send_to=send_to,
                    file=image_file)
+        volunteer.mark_email_sent()
     else:
-        print(f'{volunteer.name} no email address')
+        print(f'{volunteer.name} no valid email address')
+
+
+def notification_email_to_all_volunteers(subject: str,
+                                         email_text_file: str,
+                                         volunteers: List[Volunteer],
+                                         file: str = None):
+    with open(f'{settings.DATA_INPUT_DIR}/{email_text_file}', 'r') as myfile:
+        email_text = myfile.read()
+
+    for volunteer in volunteers:
+        try:
+            send_to = utils.compute_receiver(volunteer)
+            if send_to:
+                send_email(subject=subject,
+                           text=email_text,
+                           send_to=send_to,
+                           file=file)
+            else:
+                print(f"{volunteer} has no valid email address")
+        except:
+            print(f"Failed to send email to {volunteer}")
 
 
 def send_email(subject,

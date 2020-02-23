@@ -86,9 +86,9 @@ def main(request_file_path_list: List[str],
 
 
 if __name__ == '__main__':
-    main(volunteer_file_path_list=['mock/volunteer_mock_2'],
-         request_file_path_list=['mock/requests_mock'],
-         previously_paired_file_path_list=None,
+    main(volunteer_file_path_list=['volunteers_cleaned'],
+         request_file_path_list=['request_cov19_02192020', 'requests_yan_an'],
+         previously_paired_file_path_list=['202002231856_paired_sent'],
          keep_previou_pairing_results=True,
          send_email=False,
          log_file=True)
