@@ -42,7 +42,7 @@ def generate_email_text(all_volunteers: List[Volunteer]):
 
 
 def send_email_to_volunteer(volunteer: Volunteer):
-    subject = utils.compute_subject()
+    subject = utils.compute_subject(volunteer)
     send_to = utils.compute_receiver(volunteer)
 
     if send_to:

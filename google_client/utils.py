@@ -1,9 +1,12 @@
 from models.volunteer import Volunteer
 
 
-def compute_subject() -> str:
-    return f"From Communities Without Boundaries Foundation: \
-Your friend in China is waiting!"
+def compute_subject(volunteer: Volunteer) -> str:
+    if volunteer.paired_student:
+        subject = """[Online Tutoring For Students In Wuhan Project] - We found you a match!"""
+    else:
+        subject = """[Online Tutoring For Students In Wuhan Project] - Attention Or Action Needed"""
+    return subject
 
 
 def compute_receiver(volunteer: Volunteer) -> str:
