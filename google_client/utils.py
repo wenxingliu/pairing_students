@@ -2,7 +2,8 @@ from models.volunteer import Volunteer
 
 
 def compute_subject() -> str:
-    return f"From Communities Without Boundaries Foundation: Your friend in China is waiting!"
+    return f"From Communities Without Boundaries Foundation: \
+Your friend in China is waiting!"
 
 
 def compute_receiver(volunteer: Volunteer) -> str:
@@ -22,16 +23,26 @@ def compute_text(volunteer: Volunteer) -> str:
     else:
         notification_text = _compute_text_of_unassigned_volunteer(volunteer)
 
+    org_reminder_text = _compute_no_org_reminder_text(volunteer)
+
     body_test = f"""
     Hi {volunteer.name.title()},
 
     {notification_text}
+    {org_reminder_text}
     """
 
-    if volunteer.no_org:
-        body_test += f"""If you are not in any wechat group, please scan the attached barcode to join. Thank you!"""
-
     return body_test
+
+
+def _compute_no_org_reminder_text(volunteer: Volunteer):
+    reminder_text = ""
+    if volunteer.no_org:
+        reminder_text = f"""
+    P.S. If you are not in any wechat group, please scan the attached barcode to join. \
+Most of our communications will happen in wechat group. Thank you!
+    """
+    return reminder_text
 
 
 def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
@@ -51,7 +62,8 @@ def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
 def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
 
     body_text = f"""
-    Sorry, we were unable to accommodate the time you submitted. For your reference, here are your selected time slots in your local time {volunteer.timezone}:
+    Sorry, we were unable to accommodate the time you submitted. For your reference, \
+here are your selected time slots in your local time {volunteer.timezone}:
     
     {time_slot_list_to_str_formatting(volunteer.time_slots_local)}
     
@@ -68,7 +80,8 @@ def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
 
     if student_info:
         body_text += f"""
-        For your reference, here are some potential fits, please consider resubmit time slots accordingly to help us get you a fit:
+        For your reference, here are some potential fits, \
+please consider resubmit time slots accordingly to help us get you a fit:
     
         {student_info}
         """
