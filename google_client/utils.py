@@ -58,6 +58,8 @@ def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
     The converted Beijing time are:
     
     {time_slot_list_to_str_formatting(volunteer.time_slots_china)}
+    
+    Please consider resubmit your time accordingly to get a successful match.
     """
 
     student_info = ""
@@ -66,15 +68,10 @@ def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
 
     if student_info:
         body_text += f"""
-        Here are some potential fits, please consider resubmit time slots accordingly to help us get you a fit:
+        For your reference, here are some potential fits, please consider resubmit time slots accordingly to help us get you a fit:
     
         {student_info}
         """
-    else:
-        body_text += """
-        Please consider resubmit your time accordingly to get a successful match.
-        """
-
     return body_text
 
 

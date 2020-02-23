@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 class Requestee:
     def __init__(self, requestee_info):
         self.requestee_info = requestee_info
@@ -55,6 +58,13 @@ class Requestee:
         else:
             time_str = f"Preferred Time (Beijing Time): {self.time_slots_local}"
 
+        if pd.notnull(self.other_wechat_info):
+            additional_wechat_info = f"""
+        Our data suggests there are more than one wechat accounts of {self.name} on file: {self.other_wechat_info}
+        """
+        else:
+            additional_wechat_info = ''
+
         formatted_text = f"""
         Name: {self.name.title()}
         {time_str} 
@@ -64,14 +74,9 @@ class Requestee:
         English Learning (Years): {self.requestee_info.get('english_learning_in_years')}
         Preferred Content: {self.requestee_info.get('content')}
         Doctor Family: {"Yes" if self.doctor_family else "No"}
-        COVID-19 Patient Family: {"Yes" if self.patient_family else "No"}\n
+        COVID-19 Patient Family: {"Yes" if self.patient_family else "No"}
+        {additional_wechat_info}
         """
-
-        if self.other_wechat_info:
-            formatted_text += f"""
-            Our data suggests there are more than one wechat accounts on file:
-            {self.other_wechat_info}
-            """
 
         return formatted_text
 
