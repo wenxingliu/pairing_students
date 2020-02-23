@@ -45,7 +45,7 @@ REGISTERED_ORGANIZATIONS_RAW = [
 REGISTERED_ORGANIZATIONS = [org.lower() for org in REGISTERED_ORGANIZATIONS_RAW]
 
 REQUESTEE_UNIQUE_COLS = ["parent_wechat"]
-VOLUNTEER_UNIQUE_COLS = ["organization", "parent_wechat", "volunteer_email"]
+VOLUNTEER_UNIQUE_COLS = ["parent_wechat", "volunteer_email"]
 PAIRING_UNIQUE_COLS = ["requestee_wechat", "volunteer_wechat"]
 
 

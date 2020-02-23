@@ -75,8 +75,7 @@ class Requestee:
         Preferred Content: {self.requestee_info.get('content')}
         Doctor Family: {"Yes" if self.doctor_family else "No"}
         COVID-19 Patient Family: {"Yes" if self.patient_family else "No"}
-        {additional_wechat_info}
-        """
+        {additional_wechat_info}"""
 
         return formatted_text
 
