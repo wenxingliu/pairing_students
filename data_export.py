@@ -143,6 +143,7 @@ def compute_unassgined_requestee(requestees: List[Requestee], log_file: bool = T
             "doctor_family": requestee.doctor_family,
             "patient_family": requestee.patient_family,
             "recommendation_made": "Yes" if requestee.recommendation_made else "No",
+            "time_slots_china": requestee.time_slots_local,
             "other_wechat_info": requestee.other_wechat_info
         }
 

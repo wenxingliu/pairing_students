@@ -87,6 +87,6 @@ if __name__ == '__main__':
     main(volunteer_file_path_list=['mock/volunteer_mock_2'],
          request_file_path_list=['mock/requests_mock'],
          previously_paired_file_path_list=['202002230337_paired'],
-         send_email=True,
+         send_email=False,
          log_file=True)
     print('breakpoint')
