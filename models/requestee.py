@@ -74,7 +74,7 @@ class Requestee:
         # additional wechat info
         if pd.notnull(self.other_wechat_info):
             additional_wechat_info = f"""
-        *Our data suggests there are more than one wechat accounts of {self.name} on file: {self.other_wechat_info}
+    *Our data suggests there are more than one wechat accounts of {self.name} on file: {self.other_wechat_info}
         """
         else:
             additional_wechat_info = ''

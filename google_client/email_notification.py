@@ -11,6 +11,7 @@ from secrets.private import GMAIL_ACCOUNT, GMAIL_PASSWORD
 from models.volunteer import Volunteer
 
 import settings
+from time import sleep
 
 
 def email_to_all_volunteers(all_volunteers: List[Volunteer]):
@@ -25,6 +26,8 @@ def email_to_all_volunteers(all_volunteers: List[Volunteer]):
         except:
             print(f'failed to send email to {volunteer.name} at \
             {volunteer.parent_email} or {volunteer.volunteer_email}')
+
+        sleep(1)
 
 
 def generate_email_text(all_volunteers: List[Volunteer]):

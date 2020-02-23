@@ -46,7 +46,7 @@ def _dedup_based_on_selected_subset(df: pd.DataFrame, cols: List[str]) -> pd.Dat
     df = df.sort_values('timestamp')
 
     for col in cols:
-        df[col] = df[col].apply(lambda x: str(x).lower())
+        df[col] = df[col].apply(lambda x: str(x).lower().strip())
 
     dedup_df = df.drop_duplicates(cols, keep='last')
 
@@ -55,7 +55,7 @@ def _dedup_based_on_selected_subset(df: pd.DataFrame, cols: List[str]) -> pd.Dat
 
 def _backup_wechat_information(wechat_lst) -> Union[None, str]:
     if len(wechat_lst) > 1:
-        return ' ,'.join(wechat_lst)
+        return ', '.join(wechat_lst)
     else:
         return None
 

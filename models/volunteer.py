@@ -4,6 +4,7 @@ from models.time_slot import TimeSlot, local_time_slot_to_utc, utc_time_slot_to_
 
 import settings
 
+
 class Volunteer:
     def __init__(self, volunteer_info: dict):
         self.volunteer_info = volunteer_info

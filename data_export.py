@@ -24,6 +24,8 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
                 "organization": volunteer.organization,
                 "volunteer": volunteer.name,
                 "volunteer_wechat": volunteer.parent_wechat,
+                "volunteer_email": volunteer.volunteer_email,
+                "volunteer_parent_email": volunteer.parent_email,
                 "requestee": requestee.name,
                 "requestee_wechat": requestee.parent_wechat,
                 "promised_time_slot": str(promised_time_slot),

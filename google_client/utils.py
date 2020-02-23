@@ -30,7 +30,7 @@ def compute_text(volunteer: Volunteer) -> str:
     last_paragraph = _closing_paragraph()
 
     body_test = f"""
-Dear {volunteer.name.title()},
+Hi {volunteer.name.title()},
 
 Thank you sincerely for joining the online tutoring/e-pal project for students in Wuhan. \
 By building relationships with the students in Wuhan, you’re making a positive impact in \
@@ -48,9 +48,18 @@ def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
     for student in volunteer.paired_student:
         student_info += student.formatted_info
 
+    next_steps_text = f"""
+Next steps:
+1. Please reach out to your matched friend in China on Wechat. 
+2. Please kindly inform the group leader of the organization you are with that you have \
+successfully got in touch with your e-pal, or let them know if you have any questions.
+3. Four (or more) tutoring/e-pal sessions between 2/29 - 3/28 in your assigned times."""
+
     body_text = f"""
 We’re thrilled to tell you a little bit more about your friend(s) in China. \
-{student_info}"""
+    {student_info}
+{next_steps_text}
+    """
 
     return body_text
 
@@ -99,7 +108,7 @@ Most of our communications will happen in Wechat group. Thank you!
 
 def _closing_paragraph():
     return f"""
-One last thing... Please keep in mind **the Daylight Saving change on Mar 8th** when scheduling."""
+One last thing... Please keep in mind *the Daylight Saving change on Mar 8th* when scheduling."""
 
 
 def time_slot_list_to_str_formatting(time_slot_list) -> str:
