@@ -2,6 +2,7 @@ import datetime as dt
 from typing import List
 from models.time_slot import TimeSlot, local_time_slot_to_utc, utc_time_slot_to_china_tz
 
+import settings
 
 class Volunteer:
     def __init__(self, volunteer_info: dict):
@@ -23,6 +24,10 @@ class Volunteer:
         self._paired_student = []
         self._potential_match = []
         self._email_sent_time_utc = None
+
+    @property
+    def no_org(self) -> bool:
+        return str(self.organization) not in settings.REGISTERED_ORGANIZATIONS
 
     @property
     def paired_student(self):

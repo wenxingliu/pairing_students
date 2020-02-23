@@ -23,8 +23,10 @@ def dedup_dataframe(df: pd.DataFrame,
 def _combine_mutliple_wechat_entries(df: pd.DataFrame, cols: List[str]) -> pd.DataFrame:
 
     # compile wechat info
-    gp_df = df.groupby(cols).parent_wechat.apply(_backup_wechat_information).reset_index()
-    gp_df.rename(columns={"parent_wechat": "other_wechat_info"}, inplace=True)
+    gp_df = df.groupby(cols, as_index=False).agg({'parent_wechat': _backup_wechat_information})
+
+    if gp_df.empty:
+        return df
 
     # dedup based on selected column
     dedup_df = _dedup_based_on_selected_subset(df, cols)

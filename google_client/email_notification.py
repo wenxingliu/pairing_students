@@ -10,6 +10,8 @@ from google_client import utils
 from secrets.private import GMAIL_ACCOUNT, GMAIL_PASSWORD
 from models.volunteer import Volunteer
 
+import settings
+
 
 def email_to_all_volunteers(all_volunteers: List[Volunteer]):
     for volunteer in all_volunteers:
@@ -31,7 +33,12 @@ def send_email_to_volunteer(volunteer: Volunteer):
 
     if send_to:
         text = utils.compute_text(volunteer)
-        send_email(subject=subject, text=text, send_to=send_to)
+
+        # If volunteer does not belong to any registered group, send barcode
+        image_file = settings.OTHER_GROUP_IMG_PATH if volunteer.no_org else None
+
+        send_email(subject=subject, text=text, send_to=send_to,
+                   file=image_file)
     else:
         print(f'{volunteer.name} no email address')
 

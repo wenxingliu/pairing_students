@@ -40,22 +40,26 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
             paired_list.append(paired_info)
 
     paired_df = pd.DataFrame(paired_list)
-    paired_df.sort_values(["organization", "volunteer_wechat", "promised_time_slot"], inplace=True)
 
-    if log_file:
-        file_path = _compute_export_file_path('paired.csv', settings.PAIRING_OUTPUT_DIR)
-        paired_df.to_csv(file_path, index=False)
+    if paired_df.empty:
+        print('No paired')
+    else:
+        paired_df.sort_values(["organization", "volunteer_wechat", "promised_time_slot"], inplace=True)
 
-    doctor_family_count = int(paired_df.doctor_family.sum())
-    patient_family_count = int(paired_df.patient_family.sum())
+        if log_file:
+            file_path = _compute_export_file_path('paired.csv', settings.PAIRING_OUTPUT_DIR)
+            paired_df.to_csv(file_path, index=False)
 
-    print(f"""
-    Successful pairs: {len(paired_df)} 
-    Doctor Family: {doctor_family_count}
-    Patient Family: {patient_family_count}
-    """)
+        doctor_family_count = int(paired_df.doctor_family.sum())
+        patient_family_count = int(paired_df.patient_family.sum())
 
-    return paired_df
+        print(f"""
+        Successful pairs: {len(paired_df)} 
+        Doctor Family: {doctor_family_count}
+        Patient Family: {patient_family_count}
+        """)
+
+        return paired_df
 
 
 def compute_unassigned_volunteers(volunteers: List[Volunteer], log_file: bool = True):
@@ -76,13 +80,17 @@ def compute_unassigned_volunteers(volunteers: List[Volunteer], log_file: bool = 
             unassigned_volunteer_list.append(volunteer_info)
 
     unassigned_volunteer_df = pd.DataFrame(unassigned_volunteer_list)
-    unassigned_volunteer_df.sort_values(['Organization', 'Volunteer'], inplace=True)
 
-    if log_file:
-        file_path = _compute_export_file_path('unassigned_volunteers.csv', settings.DATA_OUTPUT_DIR)
-        unassigned_volunteer_df.to_csv(file_path, index=False)
+    if unassigned_volunteer_df.empty:
+        print(f'No unassigned volunteers')
+    else:
+        unassigned_volunteer_df.sort_values(['Organization', 'Volunteer'], inplace=True)
 
-    return unassigned_volunteer_df
+        if log_file:
+            file_path = _compute_export_file_path('unassigned_volunteers.csv', settings.DATA_OUTPUT_DIR)
+            unassigned_volunteer_df.to_csv(file_path, index=False)
+
+        return unassigned_volunteer_df
 
 
 def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bool = True):
@@ -141,22 +149,26 @@ def compute_unassgined_requestee(requestees: List[Requestee], log_file: bool = T
         left_requestee_list.append(requestee_info)
 
     left_requestee_df = pd.DataFrame(left_requestee_list)
-    left_requestee_df.sort_values(["doctor_family", "patient_family", "timestamp"])
 
-    if log_file:
-        file_path = _compute_export_file_path('unassigned_requestee.csv', settings.DATA_OUTPUT_DIR)
-        left_requestee_df.to_csv(file_path, index=False)
+    if left_requestee_df.empty:
+        print('No one left!')
+    else:
+        left_requestee_df.sort_values(["doctor_family", "patient_family", "timestamp"])
 
-    doctor_family_count = int(left_requestee_df.doctor_family.sum())
-    patient_family_count = int(left_requestee_df.patient_family.sum())
+        if log_file:
+            file_path = _compute_export_file_path('unassigned_requestee.csv', settings.DATA_OUTPUT_DIR)
+            left_requestee_df.to_csv(file_path, index=False)
 
-    print(f"""
-    Unassigned requests: {len(left_requestee_df)} 
-    Doctor Family: {doctor_family_count}
-    Patient Family: {patient_family_count}
-    """)
+        doctor_family_count = int(left_requestee_df.doctor_family.sum())
+        patient_family_count = int(left_requestee_df.patient_family.sum())
 
-    return left_requestee_df
+        print(f"""
+        Unassigned requests: {len(left_requestee_df)} 
+        Doctor Family: {doctor_family_count}
+        Patient Family: {patient_family_count}
+        """)
+
+        return left_requestee_df
 
 
 def _compute_export_file_path(file_name: str, dir_path: str) -> str:

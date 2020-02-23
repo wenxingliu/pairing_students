@@ -29,6 +29,21 @@ VOLUNTEER_COLUMNS_MAPPER = {
 }
 
 
+REGISTERED_ORGANIZATIONS_RAW = [
+    "CWB",
+    "Youth Hope Fund",
+    "KC parenting",
+    "Golden Oaks",
+    "YMCCC",
+    "Kansas City Institute of Chinese Language and Culture",
+    "Lawrence Chinese School",
+    "Carolinas Chinese American Civic Center",
+    "New York Chinese Coffee Club Youth Group",
+    "New Jersey Volunteer Group",
+    "Asian American Civic Scholars（St. Louis)"
+]
+REGISTERED_ORGANIZATIONS = [org.lower() for org in REGISTERED_ORGANIZATIONS_RAW]
+
 REQUESTEE_UNIQUE_COLS = ["parent_wechat"]
 VOLUNTEER_UNIQUE_COLS = ["organization", "parent_wechat", "volunteer_email"]
 PAIRING_UNIQUE_COLS = ["requestee_wechat", "volunteer_wechat"]
@@ -63,3 +78,4 @@ MATCHING_CRITERIA_SOFT = ["age"]
 DATA_OUTPUT_DIR = 'data/outputs/'
 PAIRING_OUTPUT_DIR = 'data/pairing_output/'
 DATA_INPUT_DIR = 'data/input/'
+OTHER_GROUP_IMG_PATH = f"{DATA_INPUT_DIR}/CWB_GROUP.jpeg"
