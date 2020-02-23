@@ -69,6 +69,7 @@ def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
     body_text = f"""
 We sincerely apologize for not being able to accommodate the time you submitted. \
 Please consider re-submit your time accordingly to get a successful match.
+
 For your reference, here are your selected time slots in your local timezone \
 ({volunteer.timezone}):
 {time_slot_list_to_str_formatting(volunteer.time_slots_local)}
