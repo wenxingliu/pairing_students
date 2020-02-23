@@ -27,28 +27,16 @@ def compute_text(volunteer: Volunteer) -> str:
     last_paragraph = _closing_paragraph()
 
     body_test = f"""
-Hi {volunteer.name.title()},
+Dear {volunteer.name.title()},
+
+Thank you sincerely for joining the online tutoring/e-pal project for students in Wuhan. \
+By building relationships with the students in Wuhan, you’re making a positive impact in \
+their lives at a very challenging time.
 {notification_text}
 {org_reminder_text}{last_paragraph}
     """
 
     return body_test
-
-
-def _closing_paragraph():
-    return f"""
-One last thing... Please keep in mind the Daylight Saving change on Mar 8th when scheduling.
-    """
-
-
-def _compute_no_org_reminder_text(volunteer: Volunteer):
-    reminder_text = ""
-    if volunteer.no_org:
-        reminder_text = f"""
-P.S. If you are not in a wechat group of any organization, please scan the attached barcode to join. \
-Most of our communications will happen in wechat group. Thank you!
-    """
-    return reminder_text
 
 
 def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
@@ -58,8 +46,8 @@ def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
         student_info += student.formatted_info
 
     body_text = f"""
-Here is a little bit more about your friend(s) in China:
-    {student_info}"""
+We’re thrilled to tell you a little bit more about your friend(s) in China. \
+{student_info}"""
 
     return body_text
 
@@ -67,8 +55,15 @@ Here is a little bit more about your friend(s) in China:
 def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
 
     body_text = f"""
-We sincerely apologize for not being able to accommodate the time you submitted. \
-Please consider re-submit your time accordingly to get a successful match.
+We, together with the students in Wuhan, \
+are appreciative of the outpouring of your generosity around this project. \
+Although there are many students waiting to be connected. \
+we were unable to find a good fit for you due to timezone differences, \
+We sincerely apologize for not being able to accommodate the time you selected. \
+Please kindly consider re-submitting a form through the following link, \
+and try a different time to help us connect you with a friend in China.
+
+https://forms.gle/CKiQGz58CdU3hUXz7
 
 For your reference, here are your selected time slots in your local timezone \
 ({volunteer.timezone}):
@@ -83,11 +78,25 @@ The converted Beijing time are:
         student_info += student.formatted_info
 
     if student_info:
-        body_text += f"""
-Although we were not able to find a best fit, there are some possible time slots, \
+        body_text += f"""Although we were not able to find a best fit, there are some possible time slots, \
 please consider resubmit your available time slots accordingly to help us get you a fit:
     {student_info}"""
     return body_text
+
+
+def _compute_no_org_reminder_text(volunteer: Volunteer):
+    reminder_text = ""
+    if volunteer.no_org:
+        reminder_text = f"""P.S. If you are not in a Wechat group of any organization, \
+please scan the attached barcode to join. \
+Most of our communications will happen in Wechat group. Thank you!
+    """
+    return reminder_text
+
+
+def _closing_paragraph():
+    return f"""
+One last thing... Please keep in mind **the Daylight Saving change on Mar 8th** when scheduling."""
 
 
 def time_slot_list_to_str_formatting(time_slot_list) -> str:
