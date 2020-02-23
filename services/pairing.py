@@ -33,6 +33,3 @@ def find_pair(requestee: Requestee, all_volunteers: List[Volunteer]):
             matched_volunteer.assign(requestee, promised_time)
             requestee.assign(matched_volunteer, promised_time)
             break
-
-    # if matched_volunteer is None:
-    #     print(f'no match for {requestee}')

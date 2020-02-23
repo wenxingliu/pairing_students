@@ -136,3 +136,7 @@ def assign_scarcity_metrics_to_person_and_time_slot(time_slot_list,
             return max(scarcity_index_list)
     else:
         return 0
+
+
+def invalid_wechat(wechat_id: str) -> id:
+    return str(wechat_id).lower().startswith("wxid")

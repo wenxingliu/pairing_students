@@ -6,7 +6,8 @@ import pandas as pd
 
 from models.requestee import Requestee
 from models.time_slot import TimeSlot, TimeSlotList
-from services.utils.common import (cleanup_time_slot_day,
+from services.utils.common import (invalid_wechat,
+                                   cleanup_time_slot_day,
                                    compute_time_part_from_str,
                                    assign_scarcity_metrics_to_person_and_time_slot)
 
