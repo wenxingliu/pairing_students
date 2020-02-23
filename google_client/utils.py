@@ -58,7 +58,7 @@ def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
         student_info += student.formatted_info
 
     body_text = f"""
-Here is a little bit more about your friend in China:
+Here is a little bit more about your friend(s) in China:
     {student_info}"""
 
     return body_text
