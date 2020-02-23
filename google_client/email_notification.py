@@ -27,6 +27,20 @@ def email_to_all_volunteers(all_volunteers: List[Volunteer]):
             {volunteer.parent_email} or {volunteer.volunteer_email}')
 
 
+def generate_email_text(all_volunteers: List[Volunteer]):
+    for volunteer in all_volunteers:
+        try:
+            if volunteer.email_sent:
+                print(f'Email already sent to {volunteer} at {volunteer.email_sent_time_utc}')
+            else:
+                email_text = utils.compute_text(volunteer)
+                print('******************')
+                print(f'Email content generated for {volunteer.name}\n\n{email_text}\n\n')
+        except:
+            print(f'failed to send email to {volunteer.name} at \
+            {volunteer.parent_email} or {volunteer.volunteer_email}')
+
+
 def send_email_to_volunteer(volunteer: Volunteer):
     subject = utils.compute_subject()
     send_to = utils.compute_receiver(volunteer)

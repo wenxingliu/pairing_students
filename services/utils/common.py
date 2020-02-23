@@ -28,6 +28,8 @@ def _combine_mutliple_wechat_entries(df: pd.DataFrame, cols: List[str]) -> pd.Da
     if gp_df.empty:
         return df
 
+    gp_df.rename(columns={"parent_wechat": "other_wechat_info"}, inplace=True)
+
     # dedup based on selected column
     dedup_df = _dedup_based_on_selected_subset(df, cols)
 

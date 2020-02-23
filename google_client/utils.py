@@ -29,25 +29,20 @@ def compute_text(volunteer: Volunteer) -> str:
     """
 
     if volunteer.no_org:
-        body_test += f"""
-        If you are not in any wechat group, please scan the attached barcode to be included. Thank you!
-        """
+        body_test += f"""If you are not in any wechat group, please scan the attached barcode to join. Thank you!"""
 
     return body_test
 
 
 def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
 
-    student_info = """
-    """
+    student_info = ""
     for student in volunteer.paired_student:
         student_info += student.formatted_info
 
     body_text = f"""
-    ------------------------------
     Here is a little bit more about your friend in China:
     {student_info}
-    ------------------------------
     """
 
     return body_text
@@ -71,14 +66,14 @@ def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
 
     if student_info:
         body_text += f"""
-        ------------------------------
         Here are some potential fits, please consider resubmit time slots accordingly to help us get you a fit:
     
         {student_info}
-        ------------------------------
         """
     else:
-        body_text += "Please consider resubmit your time accordingly to get a successful match."
+        body_text += """
+        Please consider resubmit your time accordingly to get a successful match.
+        """
 
     return body_text
 

@@ -2,11 +2,12 @@ from typing import List
 from data_export import (compute_paired_data,
                          compute_unassigned_volunteers,
                          compute_volunteers_recommendations,
-                         compute_unassgined_requestee)
+                         compute_unassgined_requestee,
+                         compute_no_organization_volunteers)
 from data_mapper import (read_and_clean_requests,
                          read_and_clean_volunteers,
                          read_previous_paired_results)
-from google_client.email_notification import email_to_all_volunteers
+from google_client.email_notification import email_to_all_volunteers, generate_email_text
 from services.pairing import pair_for_all
 from services.previous_pairing import (reflect_all_previously_paired_results,
                                        compute_previously_assigned_pairs)
@@ -48,18 +49,21 @@ def main(request_file_path_list: List[str],
     make_recommendations_for_all_unassigned_volunteers(all_requestees=requestees,
                                                        all_volunteers=volunteers)
 
-    if send_email:
-        try:
+    try:
+        if send_email:
             email_to_all_volunteers(volunteers)
-        except:
-            print("Error when sending emails")
+        else:
+            generate_email_text(volunteers)
+    except:
+        print("Error when sending emails")
 
     paired_df = compute_paired_data(requestees, log_file)
     recommendation_df = compute_volunteers_recommendations(volunteers, log_file)
     unassigned_volunteers_df = compute_unassigned_volunteers(volunteers, log_file)
     unassigned_requestee_df = compute_unassgined_requestee(requestees, log_file)
+    no_org_volunteers = compute_no_organization_volunteers(volunteers, log_file)
 
-    return [paired_df, recommendation_df, unassigned_volunteers_df, unassigned_requestee_df]
+    return [paired_df, recommendation_df, unassigned_volunteers_df, unassigned_requestee_df, no_org_volunteers]
 
 
 if __name__ == '__main__':
