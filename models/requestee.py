@@ -89,7 +89,7 @@ class Requestee:
         return formatted_text
 
     def __str__(self):
-        return f"{self.name} request {self.volunteer_gender}"
+        return f"{self.name} ({self.age}) request {self.volunteer_gender}"
 
     def __repr__(self):
         return str(self)

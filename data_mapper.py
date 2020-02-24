@@ -28,6 +28,10 @@ def read_and_clean_requests(xlsx_file_path_list: List[str],
                                  first_dedup_cols=settings.REQUESTEE_UNIQUE_COLS,
                                  dedup_wechat_cols=['requestee'])
 
+    # Exclude requests with invalid wechat accounts
+    invalid_wechat_list = _invalid_wechat_account()
+    request_df = request_df.loc[~request_df.parent_wechat.isin(invalid_wechat_list)]
+
     request_df['doctor_family'] = request_df.doctor_family.apply(convert_bool_to_int)
     request_df['patient_family'] = request_df.patient_family.apply(convert_bool_to_int)
 
@@ -126,3 +130,9 @@ def _combine_multiple_xlsx_files(xlsx_file_path_list: List[str],
     combined_df = pd.concat(df_list, axis=0)
 
     return combined_df
+
+
+def _invalid_wechat_account() -> list:
+    invalid_wechat_df = pd.read_csv(settings.INVALID_WECHAT_LIST_PATH)
+    invalid_wechat_list = invalid_wechat_df.wechat.tolist()
+    return invalid_wechat_list

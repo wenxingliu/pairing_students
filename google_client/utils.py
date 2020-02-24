@@ -4,9 +4,9 @@ from models.volunteer import Volunteer
 
 def compute_subject(volunteer: Volunteer) -> str:
     if volunteer.paired_student:
-        subject = """[Online Tutoring For Students In Wuhan Project] - We found you a match!"""
+        subject = """[Online Tutoring For Students In China Project] - We found you a match!"""
     else:
-        subject = """[Online Tutoring For Students In Wuhan Project] - Attention Or Action Needed"""
+        subject = """[Online Tutoring For Students In China Project] - Attention Or Action Needed"""
     return subject
 
 
@@ -33,8 +33,8 @@ def compute_text(volunteer: Volunteer) -> str:
     body_test = f"""
 Hi {volunteer.name.title()},
 
-Thank you sincerely for joining the online tutoring/e-pal project for students in Wuhan. \
-By building relationships with the students in Wuhan, you’re making a positive impact in \
+Thank you sincerely for joining the online tutoring/e-pal project for students in China. \
+By building relationships with the students in China, you’re making a positive impact in \
 their lives at a very challenging time.
 {notification_text}
 {org_reminder_text}{last_paragraph}
@@ -68,7 +68,7 @@ We’re thrilled to tell you a little bit more about your friend(s) in China. \
 def _compute_text_of_unassigned_volunteer(volunteer: Volunteer) -> str:
 
     body_text = f"""
-We, together with the students in Wuhan, \
+We, together with the students in China, \
 are appreciative of the outpouring of your generosity around this project. \
 Although there are many students waiting to be connected. \
 we were unable to find a good fit for you due to timezone differences, \

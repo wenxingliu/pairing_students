@@ -2,8 +2,7 @@ from typing import List
 
 from models.volunteer import Volunteer
 from models.requestee import Requestee
-
-import settings as settings
+from services.utils.common import age_match
 
 
 def pair_for_all(all_requestees: List[Requestee], all_volunteers: List[Volunteer]):
@@ -32,9 +31,4 @@ def _legit_pairing(volunteer: Volunteer, requestee: Requestee) -> bool:
     return (volunteer.available
             and volunteer.has_valid_email
             and volunteer.gender == requestee.volunteer_gender
-            and _age_match(volunteer, requestee))
-
-
-def _age_match(volunteer: Volunteer, requestee: Requestee) -> bool:
-    return ((volunteer.age >= requestee.age - 1)
-            and (volunteer.age <= requestee.age + 3))
+            and age_match(volunteer, requestee, [-1, 3]))

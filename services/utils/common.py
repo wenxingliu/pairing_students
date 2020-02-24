@@ -3,6 +3,8 @@ import pandas as pd
 from typing import List, Union
 
 import settings as settings
+from models.requestee import Requestee
+from models.volunteer import Volunteer
 
 
 def dedup_dataframe(df: pd.DataFrame,
@@ -140,3 +142,10 @@ def assign_scarcity_metrics_to_person_and_time_slot(time_slot_list,
 
 def invalid_wechat(wechat_id: str) -> id:
     return str(wechat_id).lower().startswith("wxid")
+
+
+def age_match(volunteer: Volunteer,
+              requestee: Requestee,
+              age_diff_limit: List[int] = [-1, 3]) -> bool:
+    return ((volunteer.age >= requestee.age + age_diff_limit[0])
+            and (volunteer.age <= requestee.age + age_diff_limit[1]))
