@@ -13,16 +13,9 @@ def pair_for_all(all_requestees: List[Requestee], all_volunteers: List[Volunteer
 
 
 def find_pair(requestee: Requestee, all_volunteers: List[Volunteer]):
-
     for volunteer in all_volunteers:
 
-        if not volunteer.available:
-            continue
-        if not volunteer.has_valid_email:
-            continue
-        if volunteer.gender != requestee.volunteer_gender:
-            continue
-        if abs(volunteer.age - requestee.age) > settings.AGE_DIFF_THRESHOLD:
+        if not _legit_pairing(volunteer, requestee):
             continue
 
         overlapped_time = volunteer.overlapping_china_time_slots(requestee.time_slots_china)
@@ -33,3 +26,15 @@ def find_pair(requestee: Requestee, all_volunteers: List[Volunteer]):
             matched_volunteer.assign(requestee, promised_time)
             requestee.assign(matched_volunteer, promised_time)
             break
+
+
+def _legit_pairing(volunteer: Volunteer, requestee: Requestee) -> bool:
+    return (volunteer.available
+            and volunteer.has_valid_email
+            and volunteer.gender == requestee.volunteer_gender
+            and _age_match(volunteer, requestee))
+
+
+def _age_match(volunteer: Volunteer, requestee: Requestee) -> bool:
+    return ((volunteer.age >= requestee.age - 1)
+            and (volunteer.age <= requestee.age + 3))
