@@ -107,10 +107,12 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
             recommendation_info = {
                 "organization": volunteer.organization,
                 "volunteer": volunteer.name,
+                "volunteer_age": volunteer.age,
                 "volunteer_wechat": volunteer.parent_wechat,
                 "volunteer_email": volunteer.volunteer_email,
                 "volunteer_parent_email": volunteer.parent_email,
                 "requestee": requestee.name,
+                "requestee_age": requestee.age,
                 "requestee_wechat": requestee.parent_wechat,
                 "student_tentative_time": requestee.time_slots_local,
                 "other_wechat_info": requestee.other_wechat_info,

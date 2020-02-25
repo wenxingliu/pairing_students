@@ -91,6 +91,7 @@ if __name__ == '__main__':
          request_file_path_list=['requests_wuhan_20200224'],
          previously_paired_file_path_list=None,
          keep_previou_pairing_results=False,
+         include_unassigned=False,
          send_email=False,
          log_file=False)
     print('breakpoint')
