@@ -69,6 +69,9 @@ def notification_email_to_all_volunteers(subject: str,
 
     for volunteer in volunteers:
 
+        if others_org_only and (not volunteer.no_org):
+            continue
+
         image_file = settings.OTHER_GROUP_IMG_PATH if volunteer.no_org else None
 
         try:
@@ -78,10 +81,11 @@ def notification_email_to_all_volunteers(subject: str,
                            text=email_text,
                            send_to=send_to,
                            file=image_file)
+                print(f'successfully sent email to {volunteer.name}')
             else:
-                print(f"{volunteer} has no valid email address")
+                print(f"{volunteer.name} has no valid email address")
         except:
-            print(f"Failed to send email to {volunteer}")
+            print(f"Failed to send email to {volunteer.name}")
 
         sleep(1)
 
