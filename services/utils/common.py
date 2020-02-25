@@ -71,7 +71,7 @@ def convert_bool_to_int(str_val: str) -> int:
         else:
             return None
     except AttributeError:
-        return None
+        return 0
 
 
 def convert_str_to_bool(bool_str: str) -> bool:

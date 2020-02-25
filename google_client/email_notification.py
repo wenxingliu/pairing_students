@@ -14,8 +14,13 @@ from models.volunteer import Volunteer
 import settings
 
 
-def email_to_all_volunteers(all_volunteers: List[Volunteer]):
+def email_to_all_volunteers(all_volunteers: List[Volunteer],
+                            include_unassigned: bool = False):
     for volunteer in all_volunteers:
+        # skip if do not include unassigned
+        if (include_unassigned is False) and not (volunteer.paired_student or volunteer.recommendation_made):
+            continue
+
         try:
             if volunteer.email_sent:
                 print(f'Email already sent to {volunteer} at {volunteer.email_sent_time_utc}')
@@ -29,8 +34,12 @@ def email_to_all_volunteers(all_volunteers: List[Volunteer]):
         sleep(1)
 
 
-def generate_email_text(all_volunteers: List[Volunteer]):
+def generate_email_text(all_volunteers: List[Volunteer], include_unassigned: bool = False):
     for volunteer in all_volunteers:
+        # skip if do not include unassigned, and not recommended
+        if (include_unassigned is False) and not (volunteer.paired_student or volunteer.recommendation_made):
+            continue
+
         try:
             if volunteer.email_sent:
                 print(f'Email already sent to {volunteer} at {volunteer.email_sent_time_utc}')

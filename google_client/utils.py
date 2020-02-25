@@ -24,6 +24,8 @@ def compute_receiver(volunteer: Volunteer) -> str:
 def compute_text(volunteer: Volunteer) -> str:
     if volunteer.paired_student:
         notification_text = _compute_text_of_assigned_volunteer(volunteer)
+    elif volunteer.recommendation_made:
+        notification_text = _compute_text_of_volunteer_with_recommendation(volunteer)
     else:
         notification_text = _compute_text_of_unassigned_volunteer(volunteer)
 
@@ -43,24 +45,52 @@ their lives at a very challenging time.
     return body_test
 
 
-def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
-
-    student_info = ""
-    for student in volunteer.paired_student:
-        student_info += student.formatted_info
-
+def _next_steps_text():
     next_steps_text = f"""
 Next steps:
 1. Please reach out to your matched friend in China on Wechat. 
 2. Please kindly inform the group leader of the organization you are with that you have \
 successfully got in touch with your e-pal, or let them know if you have any questions.
 3. Four (or more) tutoring/e-pal sessions between 2/29 - 3/28 in your assigned times."""
+    return next_steps_text
+
+
+def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
+
+    student_info = ""
+    for student in volunteer.paired_student:
+        student_info += student.formatted_info
+
+    next_steps_text = _next_steps_text()
 
     body_text = f"""
 We’re thrilled to tell you a little bit more about your friend(s) in China. \
     {student_info}
 {next_steps_text}
     """
+
+    return body_text
+
+
+def _compute_text_of_volunteer_with_recommendation(volunteer: Volunteer) -> str:
+    body_text = f"""
+We, together with the students in China, \
+are appreciative of the outpouring of your generosity around this project. \
+Although there are many students waiting to be connected. \
+we were unable to find an exact fit for you due to timezone differences, \
+We sincerely apologize for not being able to accommodate the time you selected.
+    """
+
+    student_info = ""
+    for student in volunteer.potential_match:
+        student_info += student.formatted_info
+
+    if student_info:
+        next_steps_text = _next_steps_text()
+        body_text += f"""
+Although we were not able to find a best fit, we found a potential match for you:
+        {student_info}
+    {next_steps_text}"""
 
     return body_text
 
@@ -85,15 +115,6 @@ For your reference, here are your selected time slots in your local timezone \
 The converted Beijing time are:
 {time_slot_list_to_str_formatting(volunteer.time_slots_china)}
 """
-
-    student_info = ""
-    for student in volunteer.potential_match:
-        student_info += student.formatted_info
-
-    if student_info:
-        body_text += f"""Although we were not able to find a best fit, there are some possible time slots, \
-please consider resubmit your available time slots accordingly to help us get you a fit:
-    {student_info}"""
     return body_text
 
 

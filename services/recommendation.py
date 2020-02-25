@@ -9,36 +9,53 @@ import settings as settings
 def make_recommendations_for_all_unassigned_volunteers(all_requestees: List[Requestee],
                                                        all_volunteers: List[Volunteer]):
     for volunteer in all_volunteers:
-        if volunteer.recommendation_made:
+
+        if volunteer.recommendation_made or volunteer.paired_student:
             continue
 
         make_recommondation_for_volunteer(volunteer, all_requestees)
 
+    blind_recommendation(all_requestees=all_requestees, all_volunteers=all_volunteers)
+
 
 def make_recommondation_for_volunteer(volunteer: Volunteer,
-                                      all_requestees: List[Requestee]) -> List[Requestee]:
+                                      all_requestees: List[Requestee]) -> None:
+
+    if volunteer.recommendation_made or volunteer.paired_student:
+        return
 
     for requestee in all_requestees:
 
         if requestee.assigned or requestee.recommendation_made:
             continue
 
-        if not _legit_recommendation(volunteer, requestee):
+        if _legit_recommendation(volunteer, requestee):
+            time_slot_recommendation = _legit_close_time_slot(volunteer, requestee)
+
+            if time_slot_recommendation is not None:
+                requestee.recommendation_made = True
+                volunteer.recommend(requestee)
+                return
+
+
+def blind_recommendation(all_volunteers: List[Volunteer],
+                         all_requestees: List[Requestee]):
+    for requestee in all_requestees:
+
+        if requestee.assigned or requestee.recommendation_made:
             continue
 
-        requestee.recommendation_made = True
-        volunteer.recommend(requestee)
+        for volunteer in all_volunteers:
+            if volunteer.recommendation_made or volunteer.paired_student:
+                continue
 
-        # time_slot_recommendation = _legit_close_time_slot(volunteer, requestee)
-        #
-        # if time_slot_recommendation is not None:
-        #     requestee.recommendation_made = True
-        #     volunteer.recommend(requestee)
-        #     return
+            requestee.recommendation_made = True
+            volunteer.recommend(requestee)
+            break
 
 
 def _legit_recommendation(volunteer: Volunteer, requestee: Requestee):
-    return (age_match(volunteer=volunteer, requestee=requestee, age_diff_limit=[-3, 3])
+    return (age_match(volunteer=volunteer, requestee=requestee, age_diff_limit=[-3, 10])
             and (volunteer.gender in [requestee.volunteer_gender, requestee.gender]))
 
 

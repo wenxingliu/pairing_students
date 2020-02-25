@@ -21,11 +21,12 @@ def main(request_file_path_list: List[str],
          previously_paired_file_path_list: List[str] = None,
          keep_previou_pairing_results: bool = True,
          send_email: bool = False,
+         include_unassigned: bool = False,
          log_file: bool = True):
 
     # Step 1: Read volunteer data and request data from files
     requestee_df = read_and_clean_requests(xlsx_file_path_list=request_file_path_list,
-                                           sheet_name='学生信息收集表')
+                                           sheet_name='学生信息收集表最新版')
 
     volunteer_df = read_and_clean_volunteers(xlsx_file_path_list=volunteer_file_path_list,
                                              sheet_name='Form Responses 1')
@@ -53,9 +54,9 @@ def main(request_file_path_list: List[str],
 
     try:
         if send_email:
-            email_to_all_volunteers(volunteers)
+            email_to_all_volunteers(volunteers, include_unassigned=include_unassigned)
         else:
-            generate_email_text(volunteers)
+            generate_email_text(volunteers, include_unassigned=include_unassigned)
     except:
         print("Error when sending emails")
 
@@ -87,8 +88,8 @@ def main(request_file_path_list: List[str],
 
 if __name__ == '__main__':
     main(volunteer_file_path_list=['volunteers_cleaned'],
-         request_file_path_list=['request_cov19_02192020', 'requests_yan_an'],
-         previously_paired_file_path_list=['202002231856_paired_sent'],
+         request_file_path_list=['requests_wuhan_20200224'],
+         previously_paired_file_path_list=None,
          keep_previou_pairing_results=False,
          send_email=False,
          log_file=False)

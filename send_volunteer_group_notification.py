@@ -20,9 +20,9 @@ def main(subject: str,
 
 
 if __name__ == '__main__':
-    main(subject="",
-         email_text_file="",
-         volunteer_file_path_list=[],
+    main(subject="[Online Tutoring For Students In Wuhan Project] Attention Needed!",
+         email_text_file="after_1st_round_followup_email.txt",
+         volunteer_file_path_list=['mock/volunteer_mock_3'],
          others_org_only=False,
-         send_email=False)
+         send_email=True)
     print('breakpoint')

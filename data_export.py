@@ -101,27 +101,40 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
     for volunteer in volunteers:
         available_slots_str = ','.join([str(slot) for slot in volunteer.time_slots_china])
 
-        for request in volunteer.potential_match:
-            request_time_slot = request.time_slots_local
+        for requestee in volunteer.potential_match:
+            request_time_slot = requestee.time_slots_local
 
             recommendation_info = {
-                "Organization": volunteer.organization,
-                "Volunteer": volunteer.name,
-                "Volunteer Wechat": volunteer.parent_wechat,
-                "Potential Match": request.name,
-                "Volunteer Available Time (China Timezone)": available_slots_str,
-                "Student Available Time (China Timezone)": request_time_slot
+                "organization": volunteer.organization,
+                "volunteer": volunteer.name,
+                "volunteer_wechat": volunteer.parent_wechat,
+                "volunteer_email": volunteer.volunteer_email,
+                "volunteer_parent_email": volunteer.parent_email,
+                "requestee": requestee.name,
+                "requestee_wechat": requestee.parent_wechat,
+                "student_tentative_time": requestee.time_slots_local,
+                "other_wechat_info": requestee.other_wechat_info,
+                "doctor_family": requestee.doctor_family,
+                "patient_family": requestee.patient_family
             }
 
             recommendation_list.append(recommendation_info)
 
     recommendation_df = pd.DataFrame(recommendation_list)
-    recommendation_df.sort_values(['Organization', 'Volunteer',
-                                   'Volunteer Available Time (China Timezone)'], inplace=True)
+    recommendation_df.sort_values(['organization', 'volunteer', 'student_tentative_time'], inplace=True)
 
     if log_file:
         file_path = _compute_export_file_path('recommendations.csv', settings.DATA_OUTPUT_DIR)
         recommendation_df.to_csv(file_path, index=False)
+
+    doctor_family_count = int(recommendation_df.doctor_family.sum())
+    patient_family_count = int(recommendation_df.patient_family.sum())
+
+    print(f"""
+    Recommendation pairs: {len(recommendation_df)} 
+    Doctor Family: {doctor_family_count}
+    Patient Family: {patient_family_count}
+    """)
 
     return recommendation_df
 

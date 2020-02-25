@@ -10,7 +10,13 @@ REQUEST_COLUMNS_MAPPER = {
     "教学交流内容（必填）": "content",
     "希望视频教学交流学生的性别（必填）": "volunteer_gender",
     "家长是否有一方是医护人员？（必填）": "doctor_family",
-    "孩子是否是病患子女？（必填）": "patient_family"
+    "孩子是否是病患子女？（必填）": "patient_family",
+    # latest form new cols
+    "家长手机号码（必填）": "parent_phone",
+    "家长电子信箱地址（必填）": "parent_email",
+    "孩子姓名（必填）": "name",
+    "家长是否有一方是医护人员？或者孩子是否是病患子女？（必填）": "doctor_family",
+    "是否在武汉或者湖北其他地区？（必填）": "hubei_family"
 }
 
 VOLUNTEER_COLUMNS_MAPPER = {
@@ -67,7 +73,7 @@ DUMMY_MONDAY_DATE = '2001-01-01'  # A Monday
 CHINA_UTC_OFFSET = 8
 
 AGE_DIFF_THRESHOLD = 3
-ALLOWED_HOURS_DIFF_IN_RECOMMENDATION = 100
+ALLOWED_HOURS_DIFF_IN_RECOMMENDATION = 2
 MAX_RECOMMENDATION_NUMBER = 1
 
 PRIORITY_RULES = ["doctor_family", "patient_family"]

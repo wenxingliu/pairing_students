@@ -29,11 +29,15 @@ def read_and_clean_requests(xlsx_file_path_list: List[str],
                                  dedup_wechat_cols=['requestee'])
 
     # Exclude requests with invalid wechat accounts
-    invalid_wechat_list = _invalid_wechat_account()
-    request_df = request_df.loc[~request_df.parent_wechat.isin(invalid_wechat_list)]
+    # invalid_wechat_list = _invalid_wechat_account()
+    # request_df = request_df.loc[~request_df.parent_wechat.isin(invalid_wechat_list)]
 
-    request_df['doctor_family'] = request_df.doctor_family.apply(convert_bool_to_int)
-    request_df['patient_family'] = request_df.patient_family.apply(convert_bool_to_int)
+    if 'doctor_family' in request_df:
+        request_df['doctor_family'] = request_df.doctor_family.apply(convert_bool_to_int)
+    if 'patient_family' in request_df:
+        request_df['patient_family'] = request_df.patient_family.apply(convert_bool_to_int)
+    if 'hubei_family' in request_df:
+        request_df['hubei_family'] = request_df.hubei_family.apply(convert_bool_to_int)
 
     request_df['gender'] = request_df.gender.apply(cleanup_gender)
     request_df['volunteer_gender'] = request_df.volunteer_gender.apply(cleanup_gender)
@@ -66,7 +70,7 @@ def read_and_clean_volunteers(xlsx_file_path_list: List[str],
 
     volunteer_df = dedup_dataframe(df=volunteer_df,
                                    first_dedup_cols=settings.VOLUNTEER_UNIQUE_COLS,
-                                   dedup_wechat_cols=['volunteer_email'])
+                                   dedup_wechat_cols=None)
 
     volunteer_df['timestamp'] = pd.to_datetime(volunteer_df.timestamp)
 

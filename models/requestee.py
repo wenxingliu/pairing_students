@@ -5,7 +5,7 @@ class Requestee:
     def __init__(self, requestee_info):
         self.requestee_info = requestee_info
         self.timestamp = self.requestee_info.get('timestamp')
-        self.name = self.requestee_info.get('requestee')
+        self.name = self.requestee_info.get('name')
         self.age = self.requestee_info.get('age')
         self.gender = self.requestee_info.get('gender')
         self.parent_wechat = self.requestee_info.get('parent_wechat')
@@ -54,7 +54,7 @@ class Requestee:
     @property
     def formatted_info(self) -> str:
         # personal info string
-        if self.assigned:
+        if self.assigned or self.recommendation_made:
             PII_text = f"""
         Name: {self.name.title()}
         Age: {self.requestee_info.get('age_raw')}
