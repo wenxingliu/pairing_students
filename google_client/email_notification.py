@@ -69,13 +69,7 @@ def notification_email_to_all_volunteers(subject: str,
 
     for volunteer in volunteers:
 
-        if others_org_only and (not volunteer.no_org):
-            continue
-        elif others_org_only:
-            # If volunteer does not belong to any registered group, send barcode
-            image_file = settings.OTHER_GROUP_IMG_PATH if volunteer.no_org else None
-        else:
-            image_file = None
+        image_file = settings.OTHER_GROUP_IMG_PATH if volunteer.no_org else None
 
         try:
             send_to = utils.compute_receiver(volunteer)
@@ -88,6 +82,8 @@ def notification_email_to_all_volunteers(subject: str,
                 print(f"{volunteer} has no valid email address")
         except:
             print(f"Failed to send email to {volunteer}")
+
+        sleep(1)
 
 
 def send_email(subject,
