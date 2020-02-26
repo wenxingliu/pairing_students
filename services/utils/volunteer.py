@@ -1,11 +1,12 @@
 from collections import Counter
 import datetime as dt
-from typing import List
+from typing import List, Set
 
 import pandas as pd
 
 import settings as settings
 from models.time_slot import TimeSlot, TimeSlotList
+from models.paired_info import PairedInfo
 from models.volunteer import Volunteer
 from services.utils.common import (cleanup_time_slot_day,
                                    compute_time_part_from_str,
@@ -72,11 +73,26 @@ def _complete_time_string(time_str):
     return time_str
 
 
-def compute_volunteers(volunteer_df: pd.DataFrame) -> List[Volunteer]:
+def _not_paired(volunteer: Volunteer,
+                existing_pairs: Set[PairedInfo]) -> bool:
+    previous_paired_info = None
+    for paired_info in existing_pairs:
+        if (paired_info.volunteer_parent_email == volunteer.parent_email
+                and paired_info.volunteer_email == volunteer.volunteer_email):
+            previous_paired_info = paired_info
+    return previous_paired_info is None
+
+
+def compute_volunteers(volunteer_df: pd.DataFrame,
+                       existing_pairs: Set[PairedInfo]) -> List[Volunteer]:
     volunteers = []
 
     for volunteer_info in volunteer_df.T.to_dict().values():
         volunteer = Volunteer(volunteer_info)
-        volunteers.append(volunteer)
+
+        if _not_paired(volunteer, existing_pairs):
+            volunteers.append(volunteer)
+        else:
+            print(f"Volunteer {volunteer} already paired")
 
     return volunteers

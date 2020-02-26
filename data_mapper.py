@@ -1,3 +1,4 @@
+import datetime as dt
 import pandas as pd
 from typing import List
 
@@ -94,18 +95,30 @@ def read_and_clean_volunteers(xlsx_file_path_list: List[str],
 
 def read_previous_paired_results(csv_file_path_list: List[str],
                                  keep_previou_pairing_results: bool) -> pd.DataFrame:
-    paired_results_df = _combine_multiple_pairing_csv_files(csv_file_path_list)
+    raw_paired_results_df = _combine_multiple_pairing_csv_files(csv_file_path_list)
 
-    paired_results_df['volunteer_email_sent'] = paired_results_df.volunteer_email_sent.apply(convert_str_to_bool)
-    paired_results_df["timestamp"] = pd.to_datetime(paired_results_df.email_sent_time_utc)
+    if 'email_sent_time_utc' not in raw_paired_results_df:
+        raw_paired_results_df["timestamp"] = dt.datetime.utcnow()
+    if 'volunteer_email_sent' not in raw_paired_results_df:
+        raw_paired_results_df['volunteer_email_sent'] = True
 
-    deduped_paired_results_df = dedup_dataframe(paired_results_df, settings.PAIRING_UNIQUE_COLS)
+    raw_paired_results_df.rename(columns=settings.CONFIRMATION_COLUMNS_MAPPER, inplace=True)
+
+    if ('accept_pairing' in raw_paired_results_df) and ('connected' in raw_paired_results_df):
+        raw_paired_results_df['accept_pairing'] = raw_paired_results_df.accept_pairing.apply(convert_bool_to_int)
+        raw_paired_results_df['connected'] = raw_paired_results_df.connected.apply(convert_bool_to_int)
+        raw_paired_results_df['paired'] = raw_paired_results_df.apply(lambda r: r['accept_pairing'] and r['connected'], axis=1)
+        paired_results_df = raw_paired_results_df.loc[raw_paired_results_df.paired == 1]
+    else:
+        paired_results_df = raw_paired_results_df
+        paired_results_df["timestamp"] = pd.to_datetime(paired_results_df.email_sent_time_utc)
+        paired_results_df['volunteer_email_sent'] = paired_results_df.volunteer_email_sent.apply(convert_str_to_bool)
 
     # only keep ones that had email sent
     if not keep_previou_pairing_results:
-        deduped_paired_results_df = deduped_paired_results_df.loc[deduped_paired_results_df.volunteer_email_sent]
+        paired_results_df = paired_results_df.loc[paired_results_df.volunteer_email_sent]
 
-    return deduped_paired_results_df
+    return paired_results_df
 
 
 def _combine_multiple_pairing_csv_files(csv_file_path_list: List[str]) -> pd.DataFrame:

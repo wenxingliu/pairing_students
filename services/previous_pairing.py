@@ -23,6 +23,7 @@ def reflect_all_previously_paired_results(all_requestees: List[Requestee],
         if (previously_paired_request is not None
                 and previously_paired_volunteer is not None
                 and previously_paired_volunteer.has_valid_email):
+
             reflect_previously_paired_result_of_requestee(
                 paired_info=paired_info,
                 previously_paired_requestee=previously_paired_request,
@@ -51,8 +52,7 @@ def reflect_previously_paired_result_of_requestee(paired_info: PairedInfo,
 def compute_previously_assigned_pairs(pairing_df: pd.DataFrame) -> Set[PairedInfo]:
     paired_list = set()
 
-    for data_row in pairing_df.iterrows():
-        data_dict = data_row[1]
+    for data_dict in pairing_df.T.to_dict().values():
         paired_info = PairedInfo(data_dict)
         paired_list.add(paired_info)
 

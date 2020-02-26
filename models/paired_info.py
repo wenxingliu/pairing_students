@@ -9,6 +9,7 @@ class PairedInfo:
         self.requestee_wechat = self.paired_info.get('requestee_wechat')
         self.volunteer_name = self.paired_info.get('volunteer')
         self.volunteer_email = self.paired_info.get('volunteer_email')
+        self.volunteer_parent_email = self.paired_info.get('volunteer_parent_email')
         self.requestee_name = self.paired_info.get('requestee')
         self.promised_time_slot_str = self.paired_info.get('promised_time_slot')
         self.slot_start_time = self.paired_info.get('slot_start_time')

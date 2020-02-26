@@ -55,7 +55,8 @@ def blind_recommendation(all_volunteers: List[Volunteer],
 
 
 def _legit_recommendation(volunteer: Volunteer, requestee: Requestee):
-    return (age_match(volunteer=volunteer, requestee=requestee, age_diff_limit=[-3, 10])
+    return (age_match(volunteer=volunteer, requestee=requestee,
+                      age_diff_limit=[-1, settings.ALLOWED_HOURS_DIFF_IN_RECOMMENDATION])
             and (volunteer.gender in [requestee.volunteer_gender, requestee.gender]))
 
 

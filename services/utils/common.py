@@ -64,9 +64,9 @@ def _backup_wechat_information(wechat_lst) -> Union[None, str]:
 
 def convert_bool_to_int(str_val: str) -> int:
     try:
-        if str_val.lower() in ['否', 'no', 'n']:
+        if str_val.lower() in ['否', 'no', 'n', 'false']:
             return 0
-        elif str_val.lower() in ['是', 'yes', 'y']:
+        elif str_val.lower() in ['是', 'yes', 'y', 'true']:
             return 1
         else:
             return None

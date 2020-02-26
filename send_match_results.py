@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Set
 from data_export import (compute_paired_data,
                          compute_unassigned_volunteers,
                          compute_volunteers_recommendations,
@@ -31,19 +31,15 @@ def main(request_file_path_list: List[str],
     volunteer_df = read_and_clean_volunteers(xlsx_file_path_list=volunteer_file_path_list,
                                              sheet_name='Form Responses 1')
 
-    # Step 2: Compute corresponding class objects
-    requestees = compute_requestees(requestee_df)
-    volunteers = compute_volunteers(volunteer_df)
-
-    # Step 3: Read existing pairing data, and reflect existing pairing with new data
+    # Step 2: Read existing pairing data, and reflect existing pairing with new data
     if previously_paired_file_path_list is not None:
         existing_pairs_df = read_previous_paired_results(previously_paired_file_path_list,
                                                          keep_previou_pairing_results)
         existing_pairs = compute_previously_assigned_pairs(existing_pairs_df)
 
-        reflect_all_previously_paired_results(all_volunteers=volunteers,
-                                              all_requestees=requestees,
-                                              existing_pairs=existing_pairs)
+    # Step 3: Compute corresponding class objects
+    requestees = compute_requestees(requestee_df, existing_pairs)
+    volunteers = compute_volunteers(volunteer_df, existing_pairs)
 
     # Step 4: Find match based on gender, time slot
     pair_for_all(all_requestees=requestees, all_volunteers=volunteers)
@@ -52,6 +48,7 @@ def main(request_file_path_list: List[str],
     make_recommendations_for_all_unassigned_volunteers(all_requestees=requestees,
                                                        all_volunteers=volunteers)
 
+    # Step 6: Send email
     try:
         if send_email:
             email_to_all_volunteers(volunteers, include_unassigned=include_unassigned)
@@ -87,7 +84,7 @@ def main(request_file_path_list: List[str],
 
 
 if __name__ == '__main__':
-    main(volunteer_file_path_list=['volunteers_cleaned'],
+    main(volunteer_file_path_list=['volunteer_cleaned_0225'],
          request_file_path_list=['requests_wuhan_20200224'],
          previously_paired_file_path_list=None,
          keep_previou_pairing_results=False,

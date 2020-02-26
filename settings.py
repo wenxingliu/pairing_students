@@ -34,6 +34,11 @@ VOLUNTEER_COLUMNS_MAPPER = {
     "How many students do you want to teach per week? (30 minutes of teaching per student per week)": "num_pairs"
 }
 
+CONFIRMATION_COLUMNS_MAPPER = {
+    "email received (check box for yes, leave blank for no)": "email_received",
+    "accept matching result (check box for yes, leave blank for no)": "accept_pairing",
+    "is able to connect with student in china using their wechat ID (check box for yes, leave blank for no)": "connected"
+}
 
 REGISTERED_ORGANIZATIONS_RAW = [
     "CWB",

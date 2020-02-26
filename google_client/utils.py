@@ -88,7 +88,7 @@ We sincerely apologize for not being able to accommodate the time you selected.
     if student_info:
         next_steps_text = _next_steps_text()
         body_text += f"""
-Although we were not able to find a best fit, we found a potential match for you:
+Although we were not able to find a perfect fit, we found a potential match for you:
         {student_info}
     {next_steps_text}"""
 

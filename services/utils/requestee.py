@@ -1,10 +1,11 @@
 from collections import Counter
 import datetime as dt
-from typing import List
+from typing import List, Set
 
 import pandas as pd
 
 from models.requestee import Requestee
+from models.paired_info import PairedInfo
 from models.time_slot import TimeSlot, TimeSlotList
 from services.utils.common import (invalid_wechat,
                                    cleanup_time_slot_day,
@@ -56,13 +57,26 @@ def _compute_request_scarcity(request_df: pd.DataFrame) -> dict:
     return scarcity_dict
 
 
-def compute_requestees(requestee_df: pd.DataFrame) -> List[Requestee]:
+def _not_paired(requestee: Requestee,
+                existing_pairs: Set[PairedInfo]) -> bool:
+    previous_paired_info = None
+    for paired_info in existing_pairs:
+        if paired_info.requestee_wechat == requestee.parent_wechat:
+            previous_paired_info = paired_info
+    return previous_paired_info is None
+
+
+def compute_requestees(requestee_df: pd.DataFrame,
+                       existing_pairs: Set[PairedInfo]) -> List[Requestee]:
     requestees = []
 
-    for data_row in requestee_df.iterrows():
-        requestee_info = data_row[1]
+    for requestee_info in requestee_df.T.to_dict().values():
         requestee = Requestee(requestee_info)
-        requestees.append(requestee)
+
+        if _not_paired(requestee, existing_pairs):
+            requestees.append(requestee)
+        else:
+            print(f"Request {requestee} already paired")
 
     sorted_requestees = sorted(requestees, key=lambda s: s.priority)
 
