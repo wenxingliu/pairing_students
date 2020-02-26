@@ -51,6 +51,7 @@ def blind_recommendation(all_volunteers: List[Volunteer],
 
             requestee.recommendation_made = True
             volunteer.recommend(requestee)
+            print(f"Blind match {requestee} and {volunteer}")
             break
 
 

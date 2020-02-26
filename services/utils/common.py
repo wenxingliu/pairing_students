@@ -94,11 +94,14 @@ def cleanup_gender(gender_val: str) -> str:
 
 
 def get_digits(digit_str: str) -> int:
-    cleaned_str = ''.join([i for i in str(digit_str) if i.isdigit()])
     try:
-        return int(cleaned_str)
+        return int(digit_str)
     except ValueError:
-        return None
+        cleaned_str = ''.join([i for i in str(digit_str) if i.isdigit()])
+        try:
+            return int(cleaned_str)
+        except ValueError:
+            return None
 
 
 def cleanup_time_slot_day(day_str: str) -> int:
