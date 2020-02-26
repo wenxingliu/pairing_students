@@ -114,6 +114,8 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
                 "requestee": requestee.name,
                 "requestee_age": requestee.age,
                 "requestee_wechat": requestee.parent_wechat,
+                "requestee_email": requestee.parent_email,
+                "requestee_phone": requestee.parent_phone,
                 "student_tentative_time": requestee.time_slots_local,
                 "other_wechat_info": requestee.other_wechat_info,
                 "doctor_family": requestee.doctor_family,

@@ -31,4 +31,4 @@ def _legit_pairing(volunteer: Volunteer, requestee: Requestee) -> bool:
     return (volunteer.available
             and volunteer.has_valid_email
             and volunteer.gender == requestee.volunteer_gender
-            and age_match(volunteer, requestee, [-1, 3]))
+            and age_match(volunteer, requestee, [-1, 100]))

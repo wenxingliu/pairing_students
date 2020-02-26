@@ -18,6 +18,7 @@ from services.utils.volunteer import compute_volunteers
 def main(request_file_path_list: List[str],
          volunteer_file_path_list: List[str],
          previously_paired_file_path_list: List[str] = None,
+         make_recommendation: bool = False,
          send_email: bool = False,
          include_unassigned: bool = False,
          log_file: bool = True):
@@ -42,15 +43,16 @@ def main(request_file_path_list: List[str],
     pair_for_all(all_requestees=requestees, all_volunteers=volunteers)
 
     # Step 5: For unassigned volunteers, make recommendations
-    make_recommendations_for_all_unassigned_volunteers(all_requestees=requestees,
-                                                       all_volunteers=volunteers)
+    if make_recommendation:
+        make_recommendations_for_all_unassigned_volunteers(all_requestees=requestees,
+                                                           all_volunteers=volunteers)
 
     # Step 6: Send email
     try:
         if send_email:
             email_to_all_volunteers(volunteers, include_unassigned=include_unassigned)
-        # else:
-        #     generate_email_text(volunteers, include_unassigned=include_unassigned)
+        else:
+            generate_email_text(volunteers, include_unassigned=include_unassigned)
     except:
         print("Error when sending emails")
 
@@ -83,8 +85,9 @@ def main(request_file_path_list: List[str],
 if __name__ == '__main__':
     main(volunteer_file_path_list=['volunteer_cleaned_0225'],
          request_file_path_list=['requests_wuhan_20200224'],
-         previously_paired_file_path_list=None,
+         previously_paired_file_path_list=['20200223匹配结果追踪表-Carolinas'],
          include_unassigned=False,
+         make_recommendation=False,
          send_email=False,
          log_file=False)
     print('breakpoint')
