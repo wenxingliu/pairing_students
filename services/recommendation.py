@@ -35,6 +35,7 @@ def make_recommondation_for_volunteer(volunteer: Volunteer,
             if time_slot_recommendation is not None:
                 requestee.recommendation_made = True
                 volunteer.recommend(requestee)
+                print(f"Recommend {requestee} and {volunteer}")
                 return
 
 
@@ -57,7 +58,7 @@ def blind_recommendation(all_volunteers: List[Volunteer],
 
 def _legit_recommendation(volunteer: Volunteer, requestee: Requestee):
     return (age_match(volunteer=volunteer, requestee=requestee,
-                      age_diff_limit=[-1, settings.ALLOWED_HOURS_DIFF_IN_RECOMMENDATION])
+                      age_diff_limit=[-2, 5])
             and (volunteer.gender in [requestee.volunteer_gender, requestee.gender]))
 
 
