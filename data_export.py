@@ -23,10 +23,13 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
             paired_info = {
                 "organization": volunteer.organization,
                 "volunteer": volunteer.name,
+                "volunteer_age": volunteer.age,
                 "volunteer_wechat": volunteer.parent_wechat,
                 "volunteer_email": volunteer.volunteer_email,
                 "volunteer_parent_email": volunteer.parent_email,
                 "requestee": requestee.name,
+                "requestee_age": requestee.age,
+                "requested_volunteer_gender": requestee.volunteer_gender,
                 "requestee_wechat": requestee.parent_wechat,
                 "promised_time_slot": str(promised_time_slot),
                 "slot_start_time": promised_time_slot.start.strftime("%H:%M"),
