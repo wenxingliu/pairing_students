@@ -93,8 +93,7 @@ def read_and_clean_volunteers(xlsx_file_path_list: List[str],
     return volunteer_df
 
 
-def read_previous_paired_results(csv_file_path_list: List[str],
-                                 keep_previou_pairing_results: bool) -> pd.DataFrame:
+def read_previous_paired_results(csv_file_path_list: List[str]) -> pd.DataFrame:
     raw_paired_results_df = _combine_multiple_pairing_csv_files(csv_file_path_list)
 
     if 'email_sent_time_utc' not in raw_paired_results_df:
@@ -113,10 +112,6 @@ def read_previous_paired_results(csv_file_path_list: List[str],
         paired_results_df = raw_paired_results_df
         paired_results_df["timestamp"] = pd.to_datetime(paired_results_df.email_sent_time_utc)
         paired_results_df['volunteer_email_sent'] = paired_results_df.volunteer_email_sent.apply(convert_str_to_bool)
-
-    # only keep ones that had email sent
-    if not keep_previou_pairing_results:
-        paired_results_df = paired_results_df.loc[paired_results_df.volunteer_email_sent]
 
     return paired_results_df
 

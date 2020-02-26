@@ -9,8 +9,7 @@ from data_mapper import (read_and_clean_requests,
                          read_previous_paired_results)
 from google_client.email_notification import email_to_all_volunteers, generate_email_text
 from services.pairing import pair_for_all
-from services.previous_pairing import (reflect_all_previously_paired_results,
-                                       compute_previously_assigned_pairs)
+from services.previous_pairing import compute_previously_assigned_pairs
 from services.recommendation import make_recommendations_for_all_unassigned_volunteers
 from services.utils.requestee import compute_requestees
 from services.utils.volunteer import compute_volunteers
@@ -19,7 +18,6 @@ from services.utils.volunteer import compute_volunteers
 def main(request_file_path_list: List[str],
          volunteer_file_path_list: List[str],
          previously_paired_file_path_list: List[str] = None,
-         keep_previou_pairing_results: bool = True,
          send_email: bool = False,
          include_unassigned: bool = False,
          log_file: bool = True):
@@ -33,8 +31,7 @@ def main(request_file_path_list: List[str],
 
     # Step 2: Read existing pairing data, and reflect existing pairing with new data
     if previously_paired_file_path_list is not None:
-        existing_pairs_df = read_previous_paired_results(previously_paired_file_path_list,
-                                                         keep_previou_pairing_results)
+        existing_pairs_df = read_previous_paired_results(previously_paired_file_path_list)
         existing_pairs = compute_previously_assigned_pairs(existing_pairs_df)
 
     # Step 3: Compute corresponding class objects
@@ -52,8 +49,8 @@ def main(request_file_path_list: List[str],
     try:
         if send_email:
             email_to_all_volunteers(volunteers, include_unassigned=include_unassigned)
-        else:
-            generate_email_text(volunteers, include_unassigned=include_unassigned)
+        # else:
+        #     generate_email_text(volunteers, include_unassigned=include_unassigned)
     except:
         print("Error when sending emails")
 
@@ -87,7 +84,6 @@ if __name__ == '__main__':
     main(volunteer_file_path_list=['volunteer_cleaned_0225'],
          request_file_path_list=['requests_wuhan_20200224'],
          previously_paired_file_path_list=None,
-         keep_previou_pairing_results=False,
          include_unassigned=False,
          send_email=False,
          log_file=False)
