@@ -97,10 +97,9 @@ def read_and_clean_volunteers(xlsx_file_path_list: List[str],
 def read_previous_paired_results(csv_file_path_list: List[str]) -> pd.DataFrame:
     raw_paired_results_df = _combine_multiple_pairing_csv_files(csv_file_path_list)
 
-    if 'email_sent_time_utc' not in raw_paired_results_df:
-        raw_paired_results_df["timestamp"] = dt.datetime.utcnow()
-    if 'volunteer_email_sent' not in raw_paired_results_df:
-        raw_paired_results_df['volunteer_email_sent'] = True
+    raw_paired_results_df["timestamp"] = dt.datetime.utcnow()
+
+    raw_paired_results_df['volunteer_email_sent'] = True
 
     raw_paired_results_df.rename(columns=settings.CONFIRMATION_COLUMNS_MAPPER, inplace=True)
 

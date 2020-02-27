@@ -70,7 +70,7 @@ def compute_requestees(requestee_df: pd.DataFrame,
                        existing_pairs: Set[PairedInfo]) -> List[Requestee]:
     requestees = []
 
-    for requestee_info in requestee_df.T.to_dict().values():
+    for requestee_info in requestee_df.reset_index().T.to_dict().values():
         requestee = Requestee(requestee_info)
 
         if _not_paired(requestee, existing_pairs):

@@ -93,7 +93,7 @@ def compute_volunteers(volunteer_df: pd.DataFrame,
                        existing_pairs: Set[PairedInfo]) -> List[Volunteer]:
     volunteers = []
 
-    for volunteer_info in volunteer_df.T.to_dict().values():
+    for volunteer_info in volunteer_df.reset_index().T.to_dict().values():
         volunteer = Volunteer(volunteer_info)
 
         if _not_paired(volunteer, existing_pairs):

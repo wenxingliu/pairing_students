@@ -49,10 +49,10 @@ def reflect_previously_paired_result_of_requestee(paired_info: PairedInfo,
         print(f"Paired: {paired_info}, but email not sent, will resend this time")
 
 
-def compute_previously_assigned_pairs(pairing_df: pd.DataFrame) -> Set[PairedInfo]:
+def compute_previously_assigned_pairs(pairing_df: pd.DataFrame) -> List[PairedInfo]:
     paired_list = set()
 
-    for data_dict in pairing_df.T.to_dict().values():
+    for data_dict in pairing_df.reset_index().T.to_dict().values():
         paired_info = PairedInfo(data_dict)
         paired_list.add(paired_info)
 
