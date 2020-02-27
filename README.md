@@ -12,7 +12,7 @@ Together, we fight COVID-19.
 
 
 #### Updates on 2020-02-26 23:00 MST
-Connected **312** pairs of students and tutors. 
+Connected **312** (total 410) pairs of students and tutors. 
 
 #### Updates on 2020-02-23 23:00 MST
 Connected **98** pairs of students and tutors. 
