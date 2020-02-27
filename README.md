@@ -1,6 +1,6 @@
 # Pairing Tutor-Student
 
-This project is developed to support the Online E-pal/Tutoring For Students In China Program by Communities Without Boundaries Foundation (Kansas).
+This project is developed to support the Online E-pal/Tutoring For Students In China Program initiated by Communities Without Boundaries Foundation (Kansas).
 
 This E-pal program is an initiative to connect Chinese kids in the US and kids in China, during this COVID-19(Coronavirus) outbreak.
 
