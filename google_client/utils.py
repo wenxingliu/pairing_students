@@ -7,9 +7,9 @@ from models.volunteer import Volunteer
 
 def compute_subject(volunteer: Volunteer) -> str:
     if volunteer.paired_student:
-        subject = """[Online Tutoring For Students In China Project] - We found you a match!"""
+        subject = """Online Tutoring For Students In China Project - We found you a match!"""
     else:
-        subject = """[Online Tutoring For Students In China Project] - Attention Or Action Needed"""
+        subject = """Online Tutoring For Students In China Project - Attention Or Action Needed"""
     return subject
 
 
