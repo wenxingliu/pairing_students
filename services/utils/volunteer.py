@@ -89,7 +89,7 @@ def _not_paired(volunteer: Volunteer,
             # if volunteer.name == paired_info.volunteer_name:
             #     previous_paired_info = paired_info
             # else:
-            #     print(f'Potential duplicate {volunteer.name} {volunteer.volunteer_email}')
+            #     print(f'Potential duplicate {volunteer.name} {volunteer.volunteer_email} {volunteer.parent_email}')
 
     return previous_paired_info is None
 
