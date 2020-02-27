@@ -6,6 +6,7 @@ class Requestee:
         self.requestee_info = requestee_info
         self.timestamp = self.requestee_info.get('timestamp')
         self.name = self.requestee_info.get('name')
+        self.requestee = self.requestee_info.get('requestee')
         self.age = self.requestee_info.get('age')
         self.gender = self.requestee_info.get('gender')
         self.parent_wechat = self.requestee_info.get('parent_wechat')
@@ -42,8 +43,9 @@ class Requestee:
         Heuristic: rare requests first
         """
         return (-self.doctor_family,
-                -self.patient_family,
+                -self.hubei_family,
                 self.scarcity_index,
+                self.age,
                 self.timestamp)
 
     @property
@@ -62,6 +64,7 @@ class Requestee:
         Name: {self.name.title()}
         Age: {self.requestee_info.get('age_raw')}
         Gender: {self.gender.title()}
+        Parent Name: {self.requestee}
         Parent Wechat: {self.parent_wechat}
         Parent Phone: {self.parent_phone}
         Parent Email: {self.parent_email}

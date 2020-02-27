@@ -39,7 +39,8 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
                 "email_sent_time_utc": email_sent_time_str,
                 "other_wechat_info": requestee.other_wechat_info,
                 "doctor_family": requestee.doctor_family,
-                "patient_family": requestee.patient_family
+                "patient_family": requestee.patient_family,
+                "hubei_family": requestee.hubei_family
             }
 
             paired_list.append(paired_info)
@@ -122,7 +123,8 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
                 "student_tentative_time": requestee.time_slots_local,
                 "other_wechat_info": requestee.other_wechat_info,
                 "doctor_family": requestee.doctor_family,
-                "patient_family": requestee.patient_family
+                "patient_family": requestee.patient_family,
+                "hubei_family": requestee.hubei_family
             }
 
             recommendation_list.append(recommendation_info)
@@ -164,6 +166,7 @@ def compute_unassgined_requestee(requestees: List[Requestee], log_file: bool = T
             "english_learning_in_years": requestee.requestee_info.get('english_learning_in_years'),
             "doctor_family": requestee.doctor_family,
             "patient_family": requestee.patient_family,
+            "hubei_family": requestee.hubei_family,
             "recommendation_made": "Yes" if requestee.recommendation_made else "No",
             "time_slots_china": requestee.time_slots_local,
             "other_wechat_info": requestee.other_wechat_info

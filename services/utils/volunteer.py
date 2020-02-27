@@ -73,12 +73,18 @@ def _complete_time_string(time_str):
     return time_str
 
 
+def _email_match(paired_info: PairedInfo, volunteer: Volunteer) -> bool:
+    paired_emails = set([paired_info.volunteer_parent_email, paired_info.volunteer_email])
+    volunteer_emails = set([volunteer.volunteer_email, volunteer.parent_email])
+    common_email_address = set(paired_emails).intersection(volunteer_emails)
+    return len(common_email_address) > 0
+
+
 def _not_paired(volunteer: Volunteer,
                 existing_pairs: Set[PairedInfo]) -> bool:
     previous_paired_info = None
     for paired_info in existing_pairs:
-        if (paired_info.volunteer_parent_email == volunteer.parent_email
-                and paired_info.volunteer_email == volunteer.volunteer_email):
+        if _email_match(paired_info, volunteer):
             previous_paired_info = paired_info
     return previous_paired_info is None
 
@@ -95,4 +101,5 @@ def compute_volunteers(volunteer_df: pd.DataFrame,
         else:
             print(f"Volunteer {volunteer} already paired")
 
+    volunteers = sorted(volunteers, key=lambda v: v.age)
     return volunteers

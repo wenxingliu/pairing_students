@@ -46,6 +46,8 @@ def generate_email_text(all_volunteers: List[Volunteer], include_unassigned: boo
             else:
                 email_text = utils.compute_text(volunteer)
                 print('******************')
+                email_list = utils.compute_receiver(volunteer)
+                print(email_list)
                 print(f'Email content generated for {volunteer.name}\n\n{email_text}\n\n')
         except:
             print(f'failed to send email to {volunteer.name} at \

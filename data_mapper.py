@@ -44,6 +44,7 @@ def read_and_clean_requests(xlsx_file_path_list: List[str],
     request_df['volunteer_gender'] = request_df.volunteer_gender.apply(cleanup_gender)
 
     request_df['age'] = request_df.age_raw.apply(get_digits)
+    request_df = request_df.loc[request_df.age < 18]
 
     request_df['time_slots_china'] = request_df.apply(
         lambda r: cleanup_utc_time_slots_requestee(r['time_slot_time'], r['time_slot_day']),
@@ -139,7 +140,7 @@ def _combine_multiple_xlsx_files(xlsx_file_path_list: List[str],
         sub_df['file_group'] = xlsx_file_path
         df_list.append(sub_df)
 
-    combined_df = pd.concat(df_list, axis=0)
+    combined_df = pd.concat(df_list, axis=0, sort=True)
 
     return combined_df
 

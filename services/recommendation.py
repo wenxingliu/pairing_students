@@ -15,7 +15,7 @@ def make_recommendations_for_all_unassigned_volunteers(all_requestees: List[Requ
 
         make_recommondation_for_volunteer(volunteer, all_requestees)
 
-    blind_recommendation(all_requestees=all_requestees, all_volunteers=all_volunteers)
+    # blind_recommendation(all_requestees=all_requestees, all_volunteers=all_volunteers)
 
 
 def make_recommondation_for_volunteer(volunteer: Volunteer,
@@ -66,5 +66,5 @@ def _legit_close_time_slot(volunteer: Volunteer, requestee: Requestee):
     for time_slot_r in requestee.time_slots_china:
         for time_slot_v in volunteer.time_slots_china:
             hours_diff = (time_slot_r.fake_start_datetime - time_slot_v.fake_start_datetime).total_seconds() / 3600
-            if abs(hours_diff) < settings.ALLOWED_HOURS_DIFF_IN_RECOMMENDATION:
+            if abs(hours_diff) < 1000:
                 return time_slot_r

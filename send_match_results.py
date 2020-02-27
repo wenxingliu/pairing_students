@@ -83,11 +83,12 @@ def main(request_file_path_list: List[str],
 
 
 if __name__ == '__main__':
-    main(volunteer_file_path_list=['volunteer_cleaned_0225'],
-         request_file_path_list=['requests_wuhan_20200224'],
-         previously_paired_file_path_list=['20200223匹配结果追踪表-Carolinas'],
-         include_unassigned=False,
-         make_recommendation=False,
+    main(volunteer_file_path_list=['volunteer_cleaned_0226_SL'],
+         request_file_path_list=['学生信息收集表最新版（收集结果）武汉扩招0226 已清理SL',
+                                 '学生信息收集表最新版（全国范围）（收集结果）SL'],
+         previously_paired_file_path_list=['20200226匹配并联系成功表-核实后'],
+         include_unassigned=True,
+         make_recommendation=True,
          send_email=False,
          log_file=False)
     print('breakpoint')
