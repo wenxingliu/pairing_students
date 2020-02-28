@@ -13,6 +13,8 @@ def pair_for_all(all_requestees: List[Requestee], all_volunteers: List[Volunteer
 
 
 def find_pair(requestee: Requestee, all_volunteers: List[Volunteer]):
+    possible_volunteers = []
+
     for volunteer in all_volunteers:
 
         if not _legit_pairing(volunteer, requestee):
@@ -21,11 +23,18 @@ def find_pair(requestee: Requestee, all_volunteers: List[Volunteer]):
         overlapped_time = volunteer.overlapping_china_time_slots(requestee.time_slots_china)
 
         if overlapped_time:
-            matched_volunteer = volunteer
             promised_time = sorted(overlapped_time, key=lambda x: x.scarcity_index)[0]
-            matched_volunteer.assign(requestee, promised_time)
-            requestee.assign(matched_volunteer, promised_time)
-            break
+
+            possible_volunteers.append((volunteer, promised_time))
+
+    if possible_volunteers:
+        sorted_possible_volunteers = sorted(possible_volunteers,
+                                            key=lambda x: abs(x[0].age - requestee.age))
+
+        matched_volunteer, promised_time = sorted_possible_volunteers[0]
+
+        matched_volunteer.assign(requestee, promised_time)
+        requestee.assign(matched_volunteer, promised_time)
 
 
 def _legit_pairing(volunteer: Volunteer, requestee: Requestee) -> bool:

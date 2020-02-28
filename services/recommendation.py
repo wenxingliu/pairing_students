@@ -3,19 +3,26 @@ from typing import List
 from models.volunteer import Volunteer
 from models.requestee import Requestee
 from services.utils.common import age_match
-import settings as settings
+
+
+# def make_recommendations_for_all_unassigned_volunteers(all_requestees: List[Requestee],
+#                                                        all_volunteers: List[Volunteer]):
+#     for volunteer in all_volunteers:
+#
+#         if volunteer.recommendation_made or volunteer.paired_student:
+#             continue
+#
+#         make_recommondation_for_volunteer(volunteer, all_requestees)
 
 
 def make_recommendations_for_all_unassigned_volunteers(all_requestees: List[Requestee],
                                                        all_volunteers: List[Volunteer]):
-    for volunteer in all_volunteers:
+    for requetee in all_requestees:
 
-        if volunteer.recommendation_made or volunteer.paired_student:
+        if requetee.recommendation_made or requetee.assigned:
             continue
 
-        make_recommondation_for_volunteer(volunteer, all_requestees)
-
-    # blind_recommendation(all_requestees=all_requestees, all_volunteers=all_volunteers)
+        make_recommondation_for_requestee(requetee, all_volunteers)
 
 
 def make_recommondation_for_volunteer(volunteer: Volunteer,
@@ -37,6 +44,33 @@ def make_recommondation_for_volunteer(volunteer: Volunteer,
                 volunteer.recommend(requestee)
                 print(f"Recommend {requestee} and {volunteer}")
                 return
+
+
+def make_recommondation_for_requestee(requestee: Requestee,
+                                      all_volunteers: List[Volunteer]) -> None:
+    possible_volunteers = []
+
+    for volunteer in all_volunteers:
+
+        if volunteer.recommendation_made or volunteer.paired_student:
+            continue
+
+        if not _legit_recommendation(volunteer, requestee):
+            continue
+
+        time_slot_recommendation = _legit_close_time_slot(volunteer, requestee)
+
+        if time_slot_recommendation is not None:
+            possible_volunteers.append((volunteer, time_slot_recommendation))
+
+    if possible_volunteers:
+        sorted_possible_volunteers = sorted(possible_volunteers,
+                                            key=lambda x: abs(x[0].age - requestee.age))
+
+        recommended_volunteer, promised_time = sorted_possible_volunteers[0]
+
+        requestee.recommendation_made = True
+        recommended_volunteer.recommend(requestee)
 
 
 def blind_recommendation(all_volunteers: List[Volunteer],
