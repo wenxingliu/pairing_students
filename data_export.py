@@ -29,8 +29,10 @@ def compute_paired_data(requestees: List[Requestee], log_file: bool = True):
                 "volunteer_parent_email": volunteer.parent_email,
                 "requestee": requestee.name,
                 "requestee_age": requestee.age,
-                "requested_volunteer_gender": requestee.volunteer_gender,
                 "requestee_wechat": requestee.parent_wechat,
+                "requestee_email": requestee.parent_email,
+                "requestee_phone": requestee.parent_phone,
+                "requested_volunteer_gender": requestee.volunteer_gender,
                 "promised_time_slot": str(promised_time_slot),
                 "slot_start_time": promised_time_slot.start.strftime("%H:%M"),
                 "slot_end_time": promised_time_slot.end.strftime("%H:%M"),
@@ -103,10 +105,13 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
     recommendation_list = []
 
     for volunteer in volunteers:
-        available_slots_str = ','.join([str(slot) for slot in volunteer.time_slots_china])
 
         for requestee in volunteer.potential_match:
-            request_time_slot = requestee.time_slots_local
+
+            if volunteer.email_sent:
+                email_sent_time_str = volunteer.email_sent_time_utc.strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                email_sent_time_str = settings.DUMMY_MONDAY_DATE
 
             recommendation_info = {
                 "organization": volunteer.organization,
@@ -124,7 +129,10 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
                 "other_wechat_info": requestee.other_wechat_info,
                 "doctor_family": requestee.doctor_family,
                 "patient_family": requestee.patient_family,
-                "hubei_family": requestee.hubei_family
+                "hubei_family": requestee.hubei_family,
+                "request_time_slot": requestee.time_slots_local,
+                "volunteer_email_sent": str(requestee.volunteer.email_sent),
+                "email_sent_time_utc": email_sent_time_str
             }
 
             recommendation_list.append(recommendation_info)
