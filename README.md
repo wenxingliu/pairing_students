@@ -12,10 +12,13 @@ Together, we fight COVID-19.
 
 
 #### Updates on 2020-02-23 23:00 MST
-Connected 98 (**total 98**) pairs of students and tutors. 
+Connected 98 (**rolling total 98**) pairs of students and tutors. 
 
 #### Updates on 2020-02-26 23:00 MST
-Connected 312 (**total 410**) pairs of students and tutors. 
+Connected 312 (**rolling total 410**) pairs of students and tutors. 
 
 #### Updates on 2020-02-27 17:00 MST
-Connected 66 (**total 478**) pairs of students and tutors. 
+Connected 66 (**rolling total 478**) pairs of students and tutors. 
+
+#### Updates on 2020-02-28 21:00 MST
+Connected 76 (**rolling total 554**) pairs of students and tutors. 

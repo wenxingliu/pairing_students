@@ -83,9 +83,8 @@ def _compute_text_of_volunteer_with_recommendation(volunteer: Volunteer) -> str:
     body_text = f"""
 We, together with the students in China, \
 are appreciative of the outpouring of your generosity around this project. \
-Although there are many students waiting to be connected. \
-we were unable to find an exact fit for you due to timezone differences, \
-We sincerely apologize for not being able to accommodate the time you selected.
+We were unable to find an exact fit for you due to timezone differences, \
+and we sincerely apologize for not being able to accommodate the time you selected.
     """
 
     student_info = ""
@@ -96,7 +95,9 @@ We sincerely apologize for not being able to accommodate the time you selected.
         next_steps_text = _next_steps_text()
         last_paragraph = _closing_paragraph()
         body_text += f"""
-Although we were not able to find a perfect fit, we found a potential match for you:
+Although we were not able to find a perfect time fit, \
+we found someone who chose a similar time as you did. \
+Please communicate with the student to schedule session time:
         {student_info}
     {next_steps_text}
 {last_paragraph}"""
