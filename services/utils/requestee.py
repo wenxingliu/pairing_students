@@ -85,7 +85,7 @@ def compute_requestees(requestee_df: pd.DataFrame,
         else:
             requestees.append(requestee)
             requestee.existing_pairing_info = prev_pairing_info
-            print(f"Request {requestee} paired, but failed to connect")
+            print(f"Request {requestee} paired, but failed to connect, put back to pool")
 
     sorted_requestees = sorted(requestees, key=lambda s: s.priority)
 

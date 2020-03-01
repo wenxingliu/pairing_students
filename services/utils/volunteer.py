@@ -110,7 +110,7 @@ def compute_volunteers(volunteer_df: pd.DataFrame,
         else:
             volunteers.append(volunteer)
             volunteer.existing_pairing_info = prev_pairing_info
-            print(f"Volunteer {volunteer} paired, but failed to connect")
+            print(f"Volunteer {volunteer} paired, but failed to connect, put back to pool")
 
     volunteers = sorted(volunteers, key=lambda v: v.age)
     return volunteers
