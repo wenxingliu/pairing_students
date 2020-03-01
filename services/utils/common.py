@@ -154,3 +154,10 @@ def age_match(volunteer: Volunteer,
               age_diff_limit: List[int] = [-1, 3]) -> bool:
     return ((volunteer.age >= requestee.age + age_diff_limit[0])
             and (volunteer.age <= requestee.age + age_diff_limit[1]))
+
+
+def is_prev_paring(volunteer: Volunteer, requestee: Requestee) -> bool:
+    if volunteer.previous_pairing_info is not None:
+        if volunteer.previous_pairing_info.requestee_name == requestee.name:
+            return True
+    return False

@@ -91,8 +91,21 @@ def _previous_pairing_info(volunteer: Volunteer,
     return previous_paired_info
 
 
+def _invalidated_in_feedback(volunteer: Volunteer, backouts) -> bool:
+    if backouts is None:
+        return False
+
+    for invalid_volunteer in backouts.volunteer:
+        if _email_match(invalid_volunteer, volunteer):
+            print(f"Volunteer {volunteer} invalidated in feedback")
+            return True
+
+    return False
+
+
 def compute_volunteers(volunteer_df: pd.DataFrame,
-                       existing_pairs: Set[PairedInfo]) -> List[Volunteer]:
+                       existing_pairs: Set[PairedInfo],
+                       backouts) -> List[Volunteer]:
     volunteers = []
 
     for volunteer_info in volunteer_df.reset_index().T.to_dict().values():
@@ -102,15 +115,21 @@ def compute_volunteers(volunteer_df: pd.DataFrame,
 
         # never paired
         if prev_pairing_info is None:
-            volunteers.append(volunteer)
+            if _invalidated_in_feedback(volunteer, backouts):
+                print(f"Volunteer {volunteer.name} backed out")
+            else:
+                volunteers.append(volunteer)
         # paired and successful
         elif prev_pairing_info.valid:
-            print(f"Volunteer {volunteer} already paired, and valid")
+            print(f"Volunteer {volunteer.name} already paired, and valid")
+        # inactive volunteer
+        elif not prev_pairing_info.active_volunteer:
+            print(f"Volunteer {volunteer.name} inactive")
         # paired but not successful
         else:
             volunteers.append(volunteer)
-            volunteer.existing_pairing_info = prev_pairing_info
-            print(f"Volunteer {volunteer} paired, but failed to connect, put back to pool")
+            volunteer.previous_pairing_info = prev_pairing_info
+            print(f"Volunteer {volunteer.name} paired, but failed to connect, put back to pool")
 
     volunteers = sorted(volunteers, key=lambda v: v.age)
     return volunteers

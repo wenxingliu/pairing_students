@@ -2,20 +2,20 @@ from typing import List
 
 from models.volunteer import Volunteer
 from models.requestee import Requestee
-from services.utils.common import age_match
-
-
-# def make_recommendations_for_all_unassigned_volunteers(all_requestees: List[Requestee],
-#                                                        all_volunteers: List[Volunteer]):
-#     for volunteer in all_volunteers:
-#
-#         if volunteer.recommendation_made or volunteer.paired_student:
-#             continue
-#
-#         make_recommondation_for_volunteer(volunteer, all_requestees)
+from services.utils.common import age_match, is_prev_paring
 
 
 def make_recommendations_for_all_unassigned_volunteers(all_requestees: List[Requestee],
+                                                       all_volunteers: List[Volunteer]):
+    for volunteer in all_volunteers:
+
+        if volunteer.recommendation_made or volunteer.paired_student or (not volunteer.active):
+            continue
+
+        make_recommondation_for_volunteer(volunteer, all_requestees)
+
+
+def make_recommendations_for_all_unassigned_requestees(all_requestees: List[Requestee],
                                                        all_volunteers: List[Volunteer]):
     for requetee in all_requestees:
 
@@ -28,7 +28,7 @@ def make_recommendations_for_all_unassigned_volunteers(all_requestees: List[Requ
 def make_recommondation_for_volunteer(volunteer: Volunteer,
                                       all_requestees: List[Requestee]) -> None:
 
-    if volunteer.recommendation_made or volunteer.paired_student:
+    if volunteer.recommendation_made or volunteer.paired_student or (not volunteer.active):
         return
 
     for requestee in all_requestees:
@@ -52,7 +52,7 @@ def make_recommondation_for_requestee(requestee: Requestee,
 
     for volunteer in all_volunteers:
 
-        if volunteer.recommendation_made or volunteer.paired_student:
+        if volunteer.recommendation_made or volunteer.paired_student or (not volunteer.active):
             continue
 
         if not _legit_recommendation(volunteer, requestee):
@@ -81,7 +81,7 @@ def blind_recommendation(all_volunteers: List[Volunteer],
             continue
 
         for volunteer in all_volunteers:
-            if volunteer.recommendation_made or volunteer.paired_student:
+            if volunteer.recommendation_made or volunteer.paired_student or (not volunteer.active):
                 continue
 
             requestee.recommendation_made = True
@@ -91,8 +91,10 @@ def blind_recommendation(all_volunteers: List[Volunteer],
 
 
 def _legit_recommendation(volunteer: Volunteer, requestee: Requestee):
-    return (age_match(volunteer=volunteer, requestee=requestee,
-                      age_diff_limit=[-1, 100])
+    return (volunteer.active
+            and is_prev_paring(volunteer, requestee)
+            and age_match(volunteer=volunteer, requestee=requestee,
+                          age_diff_limit=[-1, 100])
             and (volunteer.gender in [requestee.volunteer_gender, requestee.gender]))
 
 

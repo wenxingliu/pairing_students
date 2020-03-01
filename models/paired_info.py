@@ -19,6 +19,8 @@ class PairedInfo:
         self.email_sent_time_utc = self.paired_info.get('timestamp')
         self._promised_time_slot = None
         self.valid = True
+        self.active_volunteer = True
+        self.active_requestee = True
 
     @property
     def promised_time_slot(self):

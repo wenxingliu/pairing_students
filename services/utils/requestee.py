@@ -66,8 +66,21 @@ def _previous_pairing_info(requestee: Requestee,
     return previous_paired_info
 
 
+def _invalidated_in_feedback(requestee: Requestee, backouts) -> bool:
+    if backouts is None:
+        return False
+
+    for invalid_request in backouts.requestee:
+        if invalid_request.requestee_wechat == requestee.parent_wechat:
+            print(f"Requestee {requestee} invalidated in feedback")
+            return True
+
+    return False
+
+
 def compute_requestees(requestee_df: pd.DataFrame,
-                       existing_pairs: Set[PairedInfo]) -> List[Requestee]:
+                       existing_pairs: Set[PairedInfo],
+                       backouts) -> List[Requestee]:
     requestees = []
 
     for requestee_info in requestee_df.reset_index().T.to_dict().values():
@@ -75,17 +88,23 @@ def compute_requestees(requestee_df: pd.DataFrame,
 
         prev_pairing_info = _previous_pairing_info(requestee, existing_pairs)
 
-        # never paired
+        # never paired and not backed out
         if prev_pairing_info is None:
-            requestees.append(requestee)
+            if _invalidated_in_feedback(requestee, backouts):
+                print(f"Requestee {requestee.name} backed out")
+            else:
+                requestees.append(requestee)
         # paired and successfull
         elif prev_pairing_info.valid:
-            print(f"Request {requestee} already paired, and valid")
+            print(f"Request {requestee.name} paired with {prev_pairing_info.volunteer_name}, and valid")
+        # paired but not reachable
+        elif not prev_pairing_info.active_requestee:
+            print(f"Requestee {requestee.name} inactive")
         # paired but not successful
         else:
             requestees.append(requestee)
             requestee.existing_pairing_info = prev_pairing_info
-            print(f"Request {requestee} paired, but failed to connect, put back to pool")
+            print(f"Request {requestee.name} paired, but failed to connect, put back to pool")
 
     sorted_requestees = sorted(requestees, key=lambda s: s.priority)
 

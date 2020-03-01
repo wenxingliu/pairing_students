@@ -131,7 +131,7 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
                 "patient_family": requestee.patient_family,
                 "hubei_family": requestee.hubei_family,
                 "request_time_slot": requestee.time_slots_local,
-                "volunteer_email_sent": str(requestee.volunteer.email_sent),
+                "volunteer_email_sent": str(volunteer.email_sent),
                 "email_sent_time_utc": email_sent_time_str
             }
 

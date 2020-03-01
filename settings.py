@@ -40,6 +40,20 @@ CONFIRMATION_COLUMNS_MAPPER = {
     "is able to connect with student in china using their wechat ID (check box for yes, leave blank for no)": "connected"
 }
 
+PAIRING_FEEDBACK_COLUMNS = {
+    "Timestamp": "timestamp",
+    "志愿者姓名": "volunteer",
+    "志愿者电子邮件": "volunteer_email",
+    "志愿者家长电子邮件": "volunteer_parent_email",
+    "退出志愿者姓名": "backout_volunteer",
+    "退出志愿者电子邮件": "backout_volunteer_email",
+    "退出志愿者家长电子邮件": "backout_volunteer_parent_email",
+    "国内学生姓名": "requestee",
+    "国内学生家长微信号": "requestee_wechat",
+    "国内学生家长电子邮件": "requestee_email",
+    "Email Address": "volunteer_email_auto"
+}
+
 REGISTERED_ORGANIZATIONS_RAW = [
     "CWB",
     "Youth Hope Fund",

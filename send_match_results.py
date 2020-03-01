@@ -6,11 +6,13 @@ from data_export import (compute_paired_data,
                          compute_no_organization_volunteers)
 from data_mapper import (read_and_clean_requests,
                          read_and_clean_volunteers,
-                         read_previous_paired_results)
+                         read_previous_paired_results,
+                         read_pairing_feedback)
 from google_client.email_notification import email_to_all_volunteers, generate_email_text
 from services.pairing import pair_for_all
 from services.previous_pairing import compute_previously_assigned_pairs
-from services.recommendation import make_recommendations_for_all_unassigned_volunteers
+from services.pairing_feedback import process_paired_info_based_on_feedback
+from services.recommendation import make_recommendations_for_all_unassigned_requestees
 from services.utils.requestee import compute_requestees
 from services.utils.volunteer import compute_volunteers
 
@@ -18,6 +20,7 @@ from services.utils.volunteer import compute_volunteers
 def main(request_file_path_list: List[str],
          volunteer_file_path_list: List[str],
          previously_paired_file_path_list: List[str] = None,
+         pairing_feedback_file_path_list: List[str] = None,
          make_recommendation: bool = False,
          send_email: bool = False,
          include_unassigned: bool = False,
@@ -34,17 +37,27 @@ def main(request_file_path_list: List[str],
     if previously_paired_file_path_list is not None:
         existing_pairs_df = read_previous_paired_results(previously_paired_file_path_list)
         existing_pairs = compute_previously_assigned_pairs(existing_pairs_df)
+    else:
+        existing_pairs = set()
+
+    # Step 3: Read feedbacks, and adjust previous pairs
+    if pairing_feedback_file_path_list is not None:
+        feedback_df = read_pairing_feedback(xlsx_file_path_list=pairing_feedback_file_path_list,
+                                            sheet_name='Form Responses 1')
+        backouts = process_paired_info_based_on_feedback(feedback_df, existing_pairs)
+    else:
+        backouts = None
 
     # Step 3: Compute corresponding class objects
-    requestees = compute_requestees(requestee_df, existing_pairs)
-    volunteers = compute_volunteers(volunteer_df, existing_pairs)
+    requestees = compute_requestees(requestee_df, existing_pairs, backouts)
+    volunteers = compute_volunteers(volunteer_df, existing_pairs, backouts)
 
     # Step 4: Find match based on gender, time slot
     pair_for_all(all_requestees=requestees, all_volunteers=volunteers)
 
     # Step 5: For unassigned volunteers, make recommendations
     if make_recommendation:
-        make_recommendations_for_all_unassigned_volunteers(all_requestees=requestees,
+        make_recommendations_for_all_unassigned_requestees(all_requestees=requestees,
                                                            all_volunteers=volunteers)
 
     # Step 6: Send email
@@ -101,6 +114,7 @@ if __name__ == '__main__':
                                            '202002290417_recommendations_sent',
                                            '202002291812_paired_sent',
                                            '202002291812_recommendations_sent'],
+         pairing_feedback_file_path_list=['pairing_feedback_response'],
          include_unassigned=False,
          make_recommendation=True,
          send_email=False,
