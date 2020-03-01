@@ -80,15 +80,15 @@ def _email_match(paired_info: PairedInfo, volunteer: Volunteer) -> bool:
     return len(common_email_address) > 0
 
 
-def _not_paired(volunteer: Volunteer,
-                existing_pairs: Set[PairedInfo]) -> bool:
+def _previous_pairing_info(volunteer: Volunteer,
+                           existing_pairs: Set[PairedInfo]) -> PairedInfo:
     previous_paired_info = None
     for paired_info in existing_pairs:
         if _email_match(paired_info, volunteer) and (volunteer.name == paired_info.volunteer_name):
             previous_paired_info = paired_info
         # else:
         #     print(f'Potential duplicate {volunteer.name} {volunteer.volunteer_email} {volunteer.parent_email}')
-    return previous_paired_info is None
+    return previous_paired_info
 
 
 def compute_volunteers(volunteer_df: pd.DataFrame,
@@ -98,10 +98,19 @@ def compute_volunteers(volunteer_df: pd.DataFrame,
     for volunteer_info in volunteer_df.reset_index().T.to_dict().values():
         volunteer = Volunteer(volunteer_info)
 
-        if _not_paired(volunteer, existing_pairs):
+        prev_pairing_info = _previous_pairing_info(volunteer, existing_pairs)
+
+        # never paired
+        if prev_pairing_info is None:
             volunteers.append(volunteer)
+        # paired and successful
+        elif prev_pairing_info.valid:
+            print(f"Volunteer {volunteer} already paired, and valid")
+        # paired but not successful
         else:
-            print(f"Volunteer {volunteer} already paired")
+            volunteers.append(volunteer)
+            volunteer.existing_pairing_info = prev_pairing_info
+            print(f"Volunteer {volunteer} paired, but failed to connect")
 
     volunteers = sorted(volunteers, key=lambda v: v.age)
     return volunteers

@@ -124,7 +124,7 @@ def _combine_multiple_pairing_csv_files(csv_file_path_list: List[str]) -> pd.Dat
         sub_df['file_group'] = csv_file_path
         df_list.append(sub_df)
 
-    combined_df = pd.concat(df_list, axis=0)
+    combined_df = pd.concat(df_list, axis=0, sort=True)
 
     return combined_df
 

@@ -57,13 +57,13 @@ def _compute_request_scarcity(request_df: pd.DataFrame) -> dict:
     return scarcity_dict
 
 
-def _not_paired(requestee: Requestee,
-                existing_pairs: Set[PairedInfo]) -> bool:
+def _previous_pairing_info(requestee: Requestee,
+                           existing_pairs: Set[PairedInfo]) -> PairedInfo:
     previous_paired_info = None
     for paired_info in existing_pairs:
         if paired_info.requestee_wechat == requestee.parent_wechat:
             previous_paired_info = paired_info
-    return previous_paired_info is None
+    return previous_paired_info
 
 
 def compute_requestees(requestee_df: pd.DataFrame,
@@ -73,10 +73,19 @@ def compute_requestees(requestee_df: pd.DataFrame,
     for requestee_info in requestee_df.reset_index().T.to_dict().values():
         requestee = Requestee(requestee_info)
 
-        if _not_paired(requestee, existing_pairs):
+        prev_pairing_info = _previous_pairing_info(requestee, existing_pairs)
+
+        # never paired
+        if prev_pairing_info is None:
             requestees.append(requestee)
+        # paired and successfull
+        elif prev_pairing_info.valid:
+            print(f"Request {requestee} already paired, and valid")
+        # paired but not successful
         else:
-            print(f"Request {requestee} already paired")
+            requestees.append(requestee)
+            requestee.existing_pairing_info = prev_pairing_info
+            print(f"Request {requestee} paired, but failed to connect")
 
     sorted_requestees = sorted(requestees, key=lambda s: s.priority)
 

@@ -27,6 +27,7 @@ class Volunteer:
         self._paired_student = []
         self._potential_match = []
         self._email_sent_time_utc = None
+        self.existing_pairing_info = None
 
     @property
     def no_org(self) -> bool:

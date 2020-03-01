@@ -22,6 +22,7 @@ class Requestee:
         self._volunteer = None
         self._promised_time_slot = None
         self.recommendation_made = False
+        self.existing_pairing_info = None
 
     @property
     def volunteer(self):
