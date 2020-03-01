@@ -1,4 +1,4 @@
-from typing import List, Set
+from typing import List
 from data_export import (compute_paired_data,
                          compute_unassigned_volunteers,
                          compute_volunteers_recommendations,
@@ -84,14 +84,14 @@ def main(request_file_path_list: List[str],
 
 if __name__ == '__main__':
     main(volunteer_file_path_list=['volunteer_cleaned_0229_SL'],
-         request_file_path_list=['20200226最新报名（全国范围）',
-                                 '20200226最新报名（武汉扩招）',
-                                 '20200227最新报名（全国范围）',
-                                 '20200227最新报名（武汉扩招）',
-                                 '20200228最新报名（全国范围）',
-                                 '20200228最新报名（武汉扩招）',
-                                 '20200229最新报名（全国范围）',
-                                 '20200229最新报名（武汉扩招）'],
+         request_file_path_list=['requests/20200226最新报名（全国范围）',
+                                 'requests/20200226最新报名（武汉扩招）',
+                                 'requests/20200227最新报名（全国范围）',
+                                 'requests/20200227最新报名（武汉扩招）',
+                                 'requests/20200228最新报名（全国范围）',
+                                 'requests/20200228最新报名（武汉扩招）',
+                                 'requests/20200229最新报名（全国范围）',
+                                 'requests/20200229最新报名（武汉扩招）'],
          previously_paired_file_path_list=['20200226匹配并联系成功表-核实后',
                                            '202002270452_paired_sent',
                                            '202002270452_recommendations_sent',
