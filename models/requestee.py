@@ -23,6 +23,7 @@ class Requestee:
         self._promised_time_slot = None
         self.recommendation_made = False
         self.existing_pairing_info = None
+        self.active = True
 
     @property
     def volunteer(self):
