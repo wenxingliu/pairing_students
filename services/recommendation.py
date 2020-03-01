@@ -92,7 +92,7 @@ def blind_recommendation(all_volunteers: List[Volunteer],
 
 def _legit_recommendation(volunteer: Volunteer, requestee: Requestee):
     return (volunteer.active
-            and is_prev_paring(volunteer, requestee)
+            and not is_prev_paring(volunteer, requestee)
             and age_match(volunteer=volunteer, requestee=requestee,
                           age_diff_limit=[-1, 100])
             and (volunteer.gender in [requestee.volunteer_gender, requestee.gender]))

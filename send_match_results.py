@@ -48,19 +48,19 @@ def main(request_file_path_list: List[str],
     else:
         backouts = None
 
-    # Step 3: Compute corresponding class objects
+    # Step 4: Compute corresponding class objects
     requestees = compute_requestees(requestee_df, existing_pairs, backouts)
     volunteers = compute_volunteers(volunteer_df, existing_pairs, backouts)
 
-    # Step 4: Find match based on gender, time slot
+    # Step 5: Find match based on gender, time slot
     pair_for_all(all_requestees=requestees, all_volunteers=volunteers)
 
-    # Step 5: For unassigned volunteers, make recommendations
+    # Step 6: For unassigned volunteers, make recommendations
     if make_recommendation:
         make_recommendations_for_all_unassigned_requestees(all_requestees=requestees,
                                                            all_volunteers=volunteers)
 
-    # Step 6: Send email
+    # Step 7: Send email
     try:
         if send_email:
             email_to_all_volunteers(volunteers, include_unassigned=include_unassigned)
@@ -69,6 +69,7 @@ def main(request_file_path_list: List[str],
     except:
         print("Error when sending emails")
 
+    # Step 8: Log files
     try:
         paired_df = compute_paired_data(requestees, log_file)
     except:
@@ -104,7 +105,9 @@ if __name__ == '__main__':
                                  'requests/20200228最新报名（全国范围）',
                                  'requests/20200228最新报名（武汉扩招）',
                                  'requests/20200229最新报名（全国范围）',
-                                 'requests/20200229最新报名（武汉扩招）'],
+                                 'requests/20200229最新报名（武汉扩招）',
+                                 'requests/20200301最新报名（全国范围）',
+                                 'requests/20200301最新报名（武汉扩招）'],
          previously_paired_file_path_list=['20200226匹配并联系成功表-核实后',
                                            '202002270452_paired_sent',
                                            '202002270452_recommendations_sent',
