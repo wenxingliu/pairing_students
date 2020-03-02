@@ -17,8 +17,7 @@ class Volunteer:
         self.utc_offset = self.volunteer_info.get('utc_offset')
         self.gender = self.volunteer_info.get('volunteer_gender')
         self.age = self.volunteer_info.get('age')
-        # self.num_pairs = self.volunteer_info.get('num_pairs', 1)
-        self.num_pairs = 1
+        self.num_pairs = min(settings.MAX_MATCH_STUDENTS, self.volunteer_info.get('num_pairs', 1))
         self.timezone = self.volunteer_info.get('timezone')
         self.organization = self.volunteer_info.get('organization')
         self.scarcity_index = self.volunteer_info.get('scarcity_index')

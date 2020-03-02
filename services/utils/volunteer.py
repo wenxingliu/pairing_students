@@ -122,6 +122,8 @@ def compute_volunteers(volunteer_df: pd.DataFrame,
         # paired and successful
         elif prev_pairing_info.valid:
             print(f"Volunteer {volunteer.name} already paired, and valid")
+            # volunteer.num_pairs -= 1
+            # volunteers.append(volunteer)
         # inactive volunteer
         elif not prev_pairing_info.active_volunteer:
             print(f"Volunteer {volunteer.name} inactive")

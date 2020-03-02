@@ -7,10 +7,10 @@ import pandas as pd
 from models.requestee import Requestee
 from models.paired_info import PairedInfo
 from models.time_slot import TimeSlot, TimeSlotList
-from services.utils.common import (invalid_wechat,
-                                   cleanup_time_slot_day,
+from services.utils.common import (cleanup_time_slot_day,
                                    compute_time_part_from_str,
                                    assign_scarcity_metrics_to_person_and_time_slot)
+import settings
 
 
 def cleanup_utc_time_slots_requestee(time_str: str, day_int: str) -> TimeSlotList:
@@ -85,6 +85,9 @@ def compute_requestees(requestee_df: pd.DataFrame,
 
     for requestee_info in requestee_df.reset_index().T.to_dict().values():
         requestee = Requestee(requestee_info)
+
+        if requestee.age < settings.MIN_REQUESTEE_AGE:
+            continue
 
         prev_pairing_info = _previous_pairing_info(requestee, existing_pairs)
 

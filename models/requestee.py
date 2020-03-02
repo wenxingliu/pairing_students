@@ -46,8 +46,8 @@ class Requestee:
         """
         return (-self.doctor_family,
                 -self.hubei_family,
-                self.scarcity_index,
-                self.age,
+                # self.scarcity_index,
+                # self.age,
                 self.timestamp)
 
     @property
@@ -71,8 +71,7 @@ class Requestee:
         Parent Phone: {self.parent_phone}
         Parent Email: {self.parent_email}
         Hubei Family: {"Yes" if self.hubei_family else "No"}
-        Doctor Family: {"Yes" if self.doctor_family else "No"}
-        COVID-19 Patient Family: {"Yes" if self.patient_family else "No"}"""
+        Doctor Family: {"Yes" if self.doctor_family else "No"}"""
         else:
             PII_text = ""
 

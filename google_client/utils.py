@@ -36,6 +36,7 @@ def compute_text(volunteer: Volunteer) -> str:
         chinese_email = failed_to_match_email_chinese
 
     org_reminder_text = _compute_no_org_reminder_text(volunteer)
+    last_paragraph = _closing_paragraph()
 
     body_test = f"""
 Hi {volunteer.name.title()},
@@ -44,7 +45,13 @@ Thank you sincerely for joining the online tutoring/e-pal project for students i
 By building relationships with the students in China, you’re making a positive impact in \
 their lives at a very challenging time.
 {notification_text}
+Tips and things to note:
+1. We understand the importance of privacy to everyone involved. \
+Please do NOT share the personal information of the student/parent to anyone else.      
+2. Please find useful resources at the end of this email. \
+(links shared by other volunteers, please use at your own discretion)
 {org_reminder_text}
+{last_paragraph}
 {chinese_email}"""
 
     return body_test
@@ -53,10 +60,13 @@ their lives at a very challenging time.
 def _next_steps_text():
     next_steps_text = f"""
 Next steps:
-1. Please reach out to your matched friend in China on Wechat. 
+1. Please reach out to your matched friend in China on WeChat. 
 2. Please kindly inform the group leader of the organization you are with that you have \
-successfully got in touch with your e-pal, or let them know if you have any questions.
-3. Four (or more) tutoring/e-pal sessions in your assigned times."""
+successfully got in touch with your e-pal, or let them know if you have any questions. \
+This is the last round of the matching process, \
+if you have any issue getting in touch with the student and/or parent in China, \
+please also let the group leader of your organization know. 
+3. Mark your calendar for four tutoring/e-pal sessions in the following weeks."""
     return next_steps_text
 
 
@@ -67,14 +77,12 @@ def _compute_text_of_assigned_volunteer(volunteer: Volunteer) -> str:
         student_info += student.formatted_info
 
     next_steps_text = _next_steps_text()
-    last_paragraph = _closing_paragraph()
 
     body_text = f"""
 We’re thrilled to tell you a little bit more about your friend(s) in China. \
     {student_info}
 {next_steps_text}
-{last_paragraph}
-    """
+"""
 
     return body_text
 
@@ -93,14 +101,13 @@ and we sincerely apologize for not being able to accommodate the time you select
 
     if student_info:
         next_steps_text = _next_steps_text()
-        last_paragraph = _closing_paragraph()
         body_text += f"""
 Although we were not able to find a perfect time fit, \
 we found someone who chose a similar time as you did. \
 Please communicate with the student to schedule session time:
         {student_info}
     {next_steps_text}
-{last_paragraph}"""
+"""
 
     return body_text
 
@@ -124,16 +131,16 @@ Thank you very much for your support!
 def _compute_no_org_reminder_text(volunteer: Volunteer):
     reminder_text = ""
     if volunteer.no_org:
-        reminder_text = f"""P.S. If you are not in a WeChat group of any organization, \
+        reminder_text = f"""3. If you are not in a WeChat group of any organization, \
 please scan the attached barcode to join. \
-Most of our communications will happen in WeChat group. Thank you!
-    """
+Most of our communications will happen in WeChat group."""
     return reminder_text
 
 
 def _closing_paragraph():
     return f"""
-One last thing... Please keep in mind *the Daylight Saving change on Mar 8th* when scheduling."""
+One last thing... Please keep in mind *the Daylight Saving change on Mar 8th* when scheduling.
+"""
 
 
 def time_slot_list_to_str_formatting(time_slot_list) -> str:

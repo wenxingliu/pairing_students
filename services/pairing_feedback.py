@@ -22,7 +22,7 @@ def process_paired_info_based_on_feedback(feedbacks_df: pd.DataFrame,
         if previous_pairing_info is None:
             if _not_empty(data_tuple.backout_volunteer):
                 backout_unassigned_volunteers.append(data_tuple)
-
+            print(f"cannot find prev info for {data_tuple.volunteer}")
             continue
 
         # found previously paired info, invalidate
@@ -51,10 +51,11 @@ def _retrieve_previous_pairing_info(feedback_info,
             return paired_info
 
         # found record by volunteer
+        same_name = str(paired_info.volunteer_name).lower() == feedback_info.volunteer
         paired_emails = set([paired_info.volunteer_parent_email, paired_info.volunteer_email])
         volunteer_emails = set([feedback_info.volunteer_parent_email, feedback_info.volunteer_email])
         common_email_address = set(paired_emails).intersection(volunteer_emails)
-        if len(common_email_address) > 0:
+        if len(common_email_address) > 0 and same_name:
             return paired_info
 
 
