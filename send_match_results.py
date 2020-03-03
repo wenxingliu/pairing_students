@@ -5,10 +5,10 @@ from data_export import (compute_paired_data,
                          compute_volunteers_recommendations,
                          compute_unassgined_requestee,
                          compute_no_organization_volunteers)
-from data_mapper import (read_and_clean_requests,
-                         read_and_clean_volunteers,
-                         read_previous_paired_results,
-                         read_pairing_feedback)
+from data_mapper.requestee_data import read_and_clean_requests
+from data_mapper.volunteer_data import read_and_clean_volunteers
+from data_mapper.previous_pairing_data import read_previous_paired_results
+from data_mapper.pairing_feedback_data import read_pairing_feedback
 from google_client.email_notification import email_to_all_volunteers, generate_email_text
 from services.pairing import pair_for_all
 from services.previous_pairing import compute_previously_assigned_pairs
