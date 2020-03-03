@@ -85,9 +85,10 @@ def _previous_pairing_info(volunteer: Volunteer,
     previous_paired_info = None
     for paired_info in existing_pairs:
         if _email_match(paired_info, volunteer) and (volunteer.name == paired_info.volunteer_name):
-            previous_paired_info = paired_info
-        # else:
-        #     print(f'Potential duplicate {volunteer.name} {volunteer.volunteer_email} {volunteer.parent_email}')
+            if (previous_paired_info is None
+                    or paired_info.email_sent_time_utc > previous_paired_info.email_sent_time_utc):
+                    previous_paired_info = paired_info
+
     return previous_paired_info
 
 

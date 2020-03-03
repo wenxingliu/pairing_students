@@ -45,6 +45,7 @@ def _dedup_based_on_selected_subset(df: pd.DataFrame, cols: List[str]) -> pd.Dat
     """
     sort by time, and take the latest record
     """
+    df['timestamp'] = pd.to_datetime(df.timestamp)
     df = df.sort_values('timestamp')
 
     for col in cols:
@@ -153,6 +154,8 @@ def age_match(volunteer: Volunteer,
               requestee: Requestee,
               age_diff_limit: List[int] = [-1, 3]) -> bool:
     return ((volunteer.age >= requestee.age + age_diff_limit[0])
+            and requestee.age >= 7
+            and requestee.age < 18
             and (volunteer.age <= requestee.age + age_diff_limit[1]))
 
 

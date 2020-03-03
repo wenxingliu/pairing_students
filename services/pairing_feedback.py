@@ -1,6 +1,7 @@
 from collections import namedtuple
+import datetime as dt
 import pandas as pd
-from typing import List, Set, Union
+from typing import Set, Union
 from models.paired_info import PairedInfo
 
 
@@ -16,7 +17,8 @@ def process_paired_info_based_on_feedback(feedbacks_df: pd.DataFrame,
 
     for data_tuple in feedbacks_df.itertuples():
 
-        previous_pairing_info = _retrieve_previous_pairing_info(data_tuple, existing_pairs)
+        previous_pairing_info = _retrieve_previous_pairing_info(data_tuple,
+                                                                existing_pairs)
 
         # cannot find paired info
         if previous_pairing_info is None:
@@ -33,7 +35,7 @@ def process_paired_info_based_on_feedback(feedbacks_df: pd.DataFrame,
             previous_pairing_info.active_volunteer = False
 
         # volunteer paired, but failed to connect, kick out requestee
-        if not _not_empty(data_tuple.requestee):
+        if _is_empty(data_tuple.requestee):
             previous_pairing_info.active_requestee = False
 
     return Backouts(volunteer=backout_unassigned_volunteers,
@@ -41,31 +43,60 @@ def process_paired_info_based_on_feedback(feedbacks_df: pd.DataFrame,
 
 
 def _retrieve_previous_pairing_info(feedback_info,
-                                    existing_pairs: List[PairedInfo]) -> Union[PairedInfo, None]:
+                                    existing_pairs: Set[PairedInfo]) -> Union[PairedInfo, None]:
+    feedback_datetime = feedback_info.timestamp
+    selected_pair = None
+
     for paired_info in existing_pairs:
+        feedback_after_pairing = feedback_datetime > paired_info.email_sent_time_utc
+
+        if not feedback_after_pairing:
+            continue
+
         # found record by request
-        if (
+        no_requestee_info = _is_empty(feedback_info.requestee)
+        is_same_requestee = (
                 paired_info.requestee_name == feedback_info.requestee
                 or paired_info.requestee_wechat == feedback_info.requestee_wechat
-        ):
-            return paired_info
+        )
 
-        # found record by volunteer
-        same_name = str(paired_info.volunteer_name).lower() == feedback_info.volunteer
-        paired_emails = set([paired_info.volunteer_parent_email, paired_info.volunteer_email])
-        volunteer_emails = set([feedback_info.volunteer_parent_email, feedback_info.volunteer_email])
-        common_email_address = set(paired_emails).intersection(volunteer_emails)
-        if len(common_email_address) > 0 and same_name:
-            return paired_info
+        if no_requestee_info or is_same_requestee:
+            # found record by volunteer
+            same_volunteer_name = _string_fuzzy_match(paired_info.volunteer_name,
+                                                      feedback_info.volunteer)
+            paired_emails = set([paired_info.volunteer_parent_email, paired_info.volunteer_email])
+            volunteer_emails = set([feedback_info.volunteer_parent_email, feedback_info.volunteer_email])
+            same_volunteer_email = len(set(paired_emails).intersection(volunteer_emails)) > 0
+            is_same_volunteer = (same_volunteer_name and same_volunteer_email)
+
+            if is_same_volunteer:
+                if (selected_pair is None
+                        or selected_pair.email_sent_time_utc < paired_info.email_sent_time_utc):
+                    selected_pair = paired_info
+
+    return selected_pair
 
 
 def _not_empty(input_val: Union[str, None]) -> bool:
+    return not _is_empty(input_val)
+
+
+def _is_empty(input_val: Union[str, None]) -> bool:
     if pd.isnull(input_val):
-        return False
-    elif str(input_val).lower() in ['', 'none', 'nan', 'na']:
-        return False
-    else:
         return True
+    elif str(input_val).lower() in ['', 'none', 'nan', 'na']:
+        return True
+    return False
+
+
+def _string_fuzzy_match(str_1: str, str_2: str) -> bool:
+    str_1 = str(str_1).lower().replace(' ', '')
+    str_2 = str(str_2).lower().replace(' ', '')
+
+    common = set(str_1).intersection(str_2)
+    pct_common = len(common) / (len(set(str_1)) / 2 + len(set(str_2)) / 2)
+
+    return pct_common > 0.8
 
 
 if __name__ == '__main__':

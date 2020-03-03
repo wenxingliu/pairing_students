@@ -97,9 +97,16 @@ def read_and_clean_volunteers(xlsx_file_path_list: List[str],
 def read_previous_paired_results(csv_file_path_list: List[str]) -> pd.DataFrame:
     raw_paired_results_df = _combine_multiple_pairing_csv_files(csv_file_path_list)
 
-    raw_paired_results_df["timestamp"] = dt.datetime.utcnow()
+    if 'email_sent_time_utc' in raw_paired_results_df:
+        raw_paired_results_df["timestamp"] = pd.to_datetime(raw_paired_results_df.email_sent_time_utc)
+        raw_paired_results_df.timestamp.fillna(dt.datetime(2001, 1, 1), inplace=True)
+    else:
+        raw_paired_results_df["timestamp"] = dt.datetime.utcnow()
 
-    raw_paired_results_df['volunteer_email_sent'] = True
+    if 'volunteer_email_sent' in raw_paired_results_df:
+        raw_paired_results_df.volunteer_email_sent.fillna(True, inplace=True)
+    else:
+        raw_paired_results_df['volunteer_email_sent'] = True
 
     raw_paired_results_df.rename(columns=settings.CONFIRMATION_COLUMNS_MAPPER, inplace=True)
 
@@ -110,13 +117,17 @@ def read_previous_paired_results(csv_file_path_list: List[str]) -> pd.DataFrame:
         paired_results_df = raw_paired_results_df.loc[raw_paired_results_df.paired == 1]
     else:
         paired_results_df = raw_paired_results_df
-        paired_results_df["timestamp"] = pd.to_datetime(paired_results_df.email_sent_time_utc)
         paired_results_df['volunteer_email_sent'] = paired_results_df.volunteer_email_sent.apply(convert_str_to_bool)
+
+    paired_results_df.sort_values(['timestamp', 'file_group'])
+    paired_results_df = paired_results_df.drop_duplicates(['volunteer', 'volunteer_email',
+                                                           'volunteer_parent_email', 'requestee'])
 
     return paired_results_df
 
 
-def read_pairing_feedback(xlsx_file_path_list: List[str], sheet_name: str) -> pd.DataFrame:
+def read_pairing_feedback(xlsx_file_path_list: List[str],
+                          sheet_name: str) -> pd.DataFrame:
     feedbacks_df = _combine_multiple_xlsx_files(xlsx_file_path_list=xlsx_file_path_list,
                                                 sheet_name=sheet_name,
                                                 data_dir=settings.DATA_INPUT_DIR)

@@ -62,7 +62,9 @@ def _previous_pairing_info(requestee: Requestee,
     previous_paired_info = None
     for paired_info in existing_pairs:
         if paired_info.requestee_wechat == requestee.parent_wechat:
-            previous_paired_info = paired_info
+            if (previous_paired_info is None
+                    or paired_info.email_sent_time_utc > previous_paired_info.email_sent_time_utc):
+                previous_paired_info = paired_info
     return previous_paired_info
 
 
@@ -85,9 +87,6 @@ def compute_requestees(requestee_df: pd.DataFrame,
 
     for requestee_info in requestee_df.reset_index().T.to_dict().values():
         requestee = Requestee(requestee_info)
-
-        if requestee.age < settings.MIN_REQUESTEE_AGE:
-            continue
 
         prev_pairing_info = _previous_pairing_info(requestee, existing_pairs)
 

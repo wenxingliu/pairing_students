@@ -138,22 +138,26 @@ def compute_volunteers_recommendations(volunteers: List[Volunteer], log_file: bo
             recommendation_list.append(recommendation_info)
 
     recommendation_df = pd.DataFrame(recommendation_list)
-    recommendation_df.sort_values(['organization', 'volunteer', 'student_tentative_time'], inplace=True)
 
-    if log_file:
-        file_path = _compute_export_file_path('recommendations.csv', settings.DATA_OUTPUT_DIR)
-        recommendation_df.to_csv(file_path, index=False)
+    if recommendation_df.empty:
+        print(f'No recommendation')
+    else:
+        recommendation_df.sort_values(['organization', 'volunteer', 'student_tentative_time'], inplace=True)
 
-    doctor_family_count = int(recommendation_df.doctor_family.sum())
-    patient_family_count = int(recommendation_df.patient_family.sum())
+        if log_file:
+            file_path = _compute_export_file_path('recommendations.csv', settings.DATA_OUTPUT_DIR)
+            recommendation_df.to_csv(file_path, index=False)
 
-    print(f"""
-    Recommendation pairs: {len(recommendation_df)} 
-    Doctor Family: {doctor_family_count}
-    Patient Family: {patient_family_count}
-    """)
+        doctor_family_count = int(recommendation_df.doctor_family.sum())
+        patient_family_count = int(recommendation_df.patient_family.sum())
 
-    return recommendation_df
+        print(f"""
+        Recommendation pairs: {len(recommendation_df)} 
+        Doctor Family: {doctor_family_count}
+        Patient Family: {patient_family_count}
+        """)
+
+        return recommendation_df
 
 
 def compute_unassgined_requestee(requestees: List[Requestee], log_file: bool = True) -> pd.DataFrame:
