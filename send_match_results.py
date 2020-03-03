@@ -1,10 +1,10 @@
 import datetime as dt
 from typing import List
-from data_export import (compute_paired_data,
-                         compute_unassigned_volunteers,
-                         compute_volunteers_recommendations,
-                         compute_unassgined_requestee,
-                         compute_no_organization_volunteers)
+from data_export.paired import compute_paired_data
+from data_export.unassigned_requestee import compute_unassgined_requestee
+from data_export.unassigned_volunteer import compute_unassigned_volunteers
+from data_export.recommendation import compute_volunteers_recommendations
+from data_export.utils import compute_no_organization_volunteers
 from data_mapper.requestee_data import read_and_clean_requests
 from data_mapper.volunteer_data import read_and_clean_volunteers
 from data_mapper.previous_pairing_data import read_previous_paired_results
