@@ -1,4 +1,3 @@
-import datetime as dt
 from typing import List
 from data_export.paired import compute_paired_data
 from data_export.unassigned_requestee import compute_unassgined_requestee
