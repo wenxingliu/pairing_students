@@ -29,4 +29,7 @@ Connected 76 (**rolling total 554**) pairs of students and tutors.
 Connected 27 (**rolling total 581**) pairs of students and tutors. 
 
 #### Updates on 2020-03-01 21:00 MST
-Connected 64 (**rolling total 645**) pairs of students and tutors. 
+Connected 67 (**rolling total 648**) pairs of students and tutors. 
+
+#### Updates on 2020-03-03 21:00 MST
+Connected 44 (**rolling total 692**) pairs of students and tutors. 
