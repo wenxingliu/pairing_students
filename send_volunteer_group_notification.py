@@ -1,5 +1,5 @@
 from typing import List
-from data_mapper import read_and_clean_volunteers
+from data_mapper.volunteer_data import read_and_clean_volunteers
 from google_client.email_notification import notification_email_to_all_volunteers
 from services.utils.volunteer import compute_volunteers
 
