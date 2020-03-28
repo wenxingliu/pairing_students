@@ -54,6 +54,13 @@ PAIRING_FEEDBACK_COLUMNS = {
     "Email Address": "volunteer_email_auto"
 }
 
+VOLUNTEER_HOURS_COLUMNS = {
+    "Your full name ( First and Last)": "volunteer",
+    "Your email address": "email",
+    "Your parent's email address": "parent_email",
+    "Total volunteer hours ": "hours"
+}
+
 REGISTERED_ORGANIZATIONS_RAW = [
     "CWB",
     "Youth Hope Fund",
@@ -105,6 +112,7 @@ MATCHING_CRITERIA_SOFT = ["age"]
 DATA_OUTPUT_DIR = 'data/outputs/'
 PAIRING_OUTPUT_DIR = 'data/pairing_output/'
 DATA_INPUT_DIR = 'data/input/'
+CERTIFICATE_DIR = 'data/certificate'
 OTHER_GROUP_IMG_PATH = f"{DATA_INPUT_DIR}/Org_Other_Wechat.jpeg"
 INVALID_EMAIL_LIST_PATH = f"{DATA_INPUT_DIR}/invalid_email_list.csv"
 INVALID_WECHAT_LIST_PATH = f"{DATA_INPUT_DIR}/invalid_wechat_list.csv"
