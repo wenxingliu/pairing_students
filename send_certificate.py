@@ -19,14 +19,14 @@ def generate_and_send_certificate(volunteer_hours_file: str,
             generate_certificate(volunteer_name=data_tuple.volunteer,
                                  hours=data_tuple.hours,
                                  template_file=template_file)
+            print(f'pandoc -s "{data_tuple.volunteer}.docx" -o "{data_tuple.volunteer}.pdf"')
 
         if email:
             try:
                 subject = "Volunteer certificate (Virtual Teaching And Caring)"
-                text = "Stay healthy!\n\n"
+                text = "Thank you for volunteering! Attached please find your volunteer hours certificate.\n\n- CWB Foundation"
                 send_to = [data_tuple.email, data_tuple.parent_email]
-                file_name = f"volunteers/{data_tuple.volunteer}.docx"
-                # file_name = f"pdf/{data_tuple.volunteer}.pdf"
+                file_name = f"pdf/{data_tuple.volunteer}.pdf"
                 file_path = f"{settings.CERTIFICATE_DIR}/{file_name}"
 
                 send_email(subject=subject,
@@ -47,15 +47,15 @@ def generate_and_send_certificate(volunteer_hours_file: str,
 
 if __name__ == '__main__':
     # Step 1: Generate Files
-    generate_and_send_certificate(volunteer_hours_file='volunteer_hours_test',
-                                  template_file='template',
+    generate_and_send_certificate(volunteer_hours_file='volunteer_hours',
+                                  template_file='Volunteer certificate-TEACHING-CARING',
                                   generate_doc=True,
-                                  email=True)
+                                  email=False)
 
     # Step 2: Convert to PDF
 
-    # # Step 3: Send PDFs
-    # generate_and_send_certificate(volunteer_hours_file='volunteer_hours_test',
-    #                               template_file='template',
+    # Step 3: Send PDFs
+    # generate_and_send_certificate(volunteer_hours_file='volunteer_hours',
+    #                               template_file='Volunteer certificate-TEACHING-CARING',
     #                               generate_doc=False,
     #                               email=True)
